@@ -34,6 +34,8 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     let cellSize = CGSize(width: 100, height: 100)
     var phAsset: PHAsset!
     
+    var canPanDuringThisTouch = true
+    
     // Variables for calculating the position
     enum Direction {
         case scroll
@@ -41,7 +43,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         case up
         case down
     }
-    let imageCropViewOriginalConstraintTop: CGFloat = 50
+    let imageCropViewOriginalConstraintTop: CGFloat = 60
     let imageCropViewMinimalVisibleHeight: CGFloat  = 100
     var dragDirection = Direction.up
     var imaginaryCollectionViewOffsetStartPosY: CGFloat = 0.0
@@ -76,7 +78,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         self.addGestureRecognizer(panGesture)
         
         collectionViewConstraintHeight.constant = self.frame.height - imageCropViewContainer.frame.height - imageCropViewOriginalConstraintTop
-        imageCropViewConstraintTop.constant = 50
+        imageCropViewConstraintTop.constant = 60
         dragDirection = Direction.up
         
         imageCropViewContainer.layer.shadowColor   = UIColor.black.cgColor
@@ -131,7 +133,8 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
             let subview = view?.hitTest(loc, with: nil)
             
             if subview == imageCropView && imageCropViewConstraintTop.constant == imageCropViewOriginalConstraintTop {
-                
+                // if the pan starts in the image field, don't let this touch start dragging the album, since it's a crop gesture
+                canPanDuringThisTouch = false
                 return
             }
             
@@ -188,6 +191,8 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
             }
             
         } else {
+            
+            canPanDuringThisTouch = true // reset this value for the next interaction
             
             imaginaryCollectionViewOffsetStartPosY = 0.0
             
@@ -375,7 +380,7 @@ internal extension IndexSet {
     }
 }
 
-private extension FSAlbumView {
+extension FSAlbumView {
     
     func changeImage(_ asset: PHAsset) {
         

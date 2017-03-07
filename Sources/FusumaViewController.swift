@@ -7,7 +7,9 @@
 //
 
 import UIKit
+import MobileCoreServices
 import Photos
+
 fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
   switch (lhs, rhs) {
   case let (l?, r?):
@@ -38,6 +40,8 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     func fusumaDismissedWithImage(_ image: UIImage, source: FusumaMode)
     func fusumaClosed()
     func fusumaWillClosed()
+    func fusumaWillPresentPhotosLib(_ fusumaVC: FusumaViewController)
+    func fusumaDidDismissPhotosLib(_ fusumaVC: FusumaViewController)
 }
 
 public extension FusumaDelegate {
@@ -50,6 +54,8 @@ public extension FusumaDelegate {
 public var fusumaBaseTintColor   = UIColor.hex("#FFFFFF", alpha: 1.0)
 public var fusumaTintColor       = UIColor.hex("#F38181", alpha: 1.0)
 public var fusumaBackgroundColor = UIColor.hex("#3B3D45", alpha: 1.0)
+
+public var markusAccessPhotosType: MarkusAccessPhotosType = .image
 
 public var fusumaAlbumImage : UIImage? = nil
 public var fusumaCameraImage : UIImage? = nil
@@ -100,6 +106,9 @@ public struct ImageMetadata {
 
 //@objc public class FusumaViewController: UIViewController, FSCameraViewDelegate, FSAlbumViewDelegate {
 public class FusumaViewController: UIViewController {
+    
+    /// a singleton shared instance
+    public static let shared = FusumaViewController()
 
     public var hasVideo = false
     public var cropHeightRatio: CGFloat = 1
@@ -119,13 +128,16 @@ public class FusumaViewController: UIViewController {
     @IBOutlet weak var cameraButton: UIButton!
     @IBOutlet weak var videoButton: UIButton!
     @IBOutlet weak var doneButton: UIButton!
-
+    @IBOutlet weak var expandArrowButton: UIButton!
+    
     @IBOutlet var libraryFirstConstraints: [NSLayoutConstraint]!
     @IBOutlet var cameraFirstConstraints: [NSLayoutConstraint]!
     
     lazy var albumView  = FSAlbumView.instance()
     lazy var cameraView = FSCameraView.instance()
     lazy var videoView = FSVideoCameraView.instance()
+    
+    private var neverUpdateHighlightButtonOnViewAppear = true
 
     fileprivate var hasGalleryPermission: Bool {
         return PHPhotoLibrary.authorizationStatus() == .authorized
@@ -226,6 +238,11 @@ public class FusumaViewController: UIViewController {
         
         titleLabel.textColor = fusumaBaseTintColor
         titleLabel.font = fusumaTitleFont
+        
+        let singleTapTitleLabel = UITapGestureRecognizer(target: self, action: #selector(self.titleLabelTapped(_:)))
+        
+        self.titleLabel.isUserInteractionEnabled = true
+        self.titleLabel.addGestureRecognizer(singleTapTitleLabel)
             
 //        if modeOrder != .LibraryFirst {
 //            libraryFirstConstraints.forEach { $0.priority = 250 }
@@ -265,6 +282,19 @@ public class FusumaViewController: UIViewController {
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        // high light button again for better UI
+        if neverUpdateHighlightButtonOnViewAppear {
+            self.neverUpdateHighlightButtonOnViewAppear = false
+            
+            switch self.mode {
+            case .library:
+                highlightButton(libraryButton)
+            case .camera:
+                highlightButton(cameraButton)
+            case .video:
+                highlightButton(videoButton)
+            }
+        }
     }
 
     override public func viewDidAppear(_ animated: Bool) {
@@ -285,11 +315,15 @@ public class FusumaViewController: UIViewController {
             videoView.layoutIfNeeded()
             videoView.initialize()
         }
+        
+        self.albumView.imageCropViewContainer.isHidden = false
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.stopAll()
+        self.albumView.imageCropViewContainer.isHidden = true
+        self.changeMode(.library)
     }
 
     override public var prefersStatusBarHidden : Bool {
@@ -383,6 +417,16 @@ public class FusumaViewController: UIViewController {
         }
     }
     
+    @IBAction func expandArrowButtonTapped(_ sender: UIButton) {
+        self.accessPhotosLib()
+    }
+    
+    func titleLabelTapped(_ gr: UITapGestureRecognizer) {
+        
+        if gr.state == .ended && self.mode == .library {
+            self.accessPhotosLib()
+        }
+    }
 }
 
 extension FusumaViewController: FSAlbumViewDelegate, FSCameraViewDelegate, FSVideoCameraViewDelegate {
@@ -447,6 +491,8 @@ private extension FusumaViewController {
         }
         
         self.mode = mode
+        
+        self.expandArrowButton.isHidden = self.mode != .library
         
         dishighlightButtons()
         updateDoneButtonVisibility()
@@ -543,4 +589,67 @@ private extension FusumaViewController {
         
         button.addBottomBorder(fusumaTintColor, width: 3)
     }
+    
+    
+}
+
+extension FusumaViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func accessPhotosLib() {
+        let status = PHPhotoLibrary.authorizationStatus()
+        
+        if status == .authorized {
+        } else {
+            return
+        }
+        
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        
+        var types = [String]()
+        
+        let forImage = kUTTypeImage as String
+        let forVideo = kUTTypeVideo as String
+        
+        if markusAccessPhotosType == .image {
+            types.append(forImage)
+        } else if markusAccessPhotosType == .video {
+            types.append(forVideo)
+        } else {
+            types.append(forImage)
+            types.append(forVideo)
+        }
+        
+        self.delegate?.fusumaWillPresentPhotosLib(self)
+        
+        imagePicker.mediaTypes = types
+        self.present(imagePicker, animated: true, completion: nil)
+    }
+    
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        if let assertURL = info[UIImagePickerControllerReferenceURL] as? URL {
+            let fetchResult = PHAsset.fetchAssets(withALAssetURLs: [assertURL], options: nil)
+            if let asset = fetchResult.firstObject {
+                self.albumView.changeImage(asset)
+                
+                for indexPath in self.albumView.collectionView.indexPathsForSelectedItems ?? [] {
+                    self.albumView.collectionView.deselectItem(at: indexPath, animated: false)
+                }
+            }
+        }
+        picker.dismiss(animated: true, completion: {
+            self.delegate?.fusumaDidDismissPhotosLib(self)
+        })
+    }
+    
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: {
+            self.delegate?.fusumaDidDismissPhotosLib(self)
+        })
+    }
+}
+
+public enum MarkusAccessPhotosType {
+    case image, video, imageAndVideo
 }

@@ -17,7 +17,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0hK-pW-0DW">
-                    <rect key="frame" x="0.0" y="50" width="400" height="400"/>
+                    <rect key="frame" x="0.0" y="60" width="400" height="400"/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="width" secondItem="0hK-pW-0DW" secondAttribute="height" multiplier="1:1" id="EYm-IN-2Mh"/>
@@ -79,7 +79,7 @@
                 <constraint firstItem="6gh-EB-weA" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="8DC-7U-0Ht"/>
                 <constraint firstAttribute="bottom" secondItem="6gh-EB-weA" secondAttribute="bottom" id="IOQ-4M-Rye"/>
                 <constraint firstAttribute="trailing" secondItem="6gh-EB-weA" secondAttribute="trailing" id="Lge-9D-s38"/>
-                <constraint firstItem="0hK-pW-0DW" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="50" id="ZtF-xP-XL4"/>
+                <constraint firstItem="0hK-pW-0DW" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="60" id="ZtF-xP-XL4"/>
                 <constraint firstItem="0hK-pW-0DW" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="snf-T0-XlH"/>
                 <constraint firstAttribute="trailing" secondItem="0hK-pW-0DW" secondAttribute="trailing" id="syg-FP-hcI"/>
                 <constraint firstItem="6gh-EB-weA" firstAttribute="top" secondItem="0hK-pW-0DW" secondAttribute="bottom" id="t3B-Bo-8p1"/>

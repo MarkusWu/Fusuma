@@ -110,6 +110,14 @@ class ViewController: UIViewController, FusumaDelegate {
     func fusumaWillClosed() {
         print("Called when the close button is pressed")
     }
+    
+    func fusumaWillPresentPhotosLib(_ fusumaVC: FusumaViewController) {
+        //
+    }
+    
+    func fusumaDidDismissPhotosLib(_ fusumaVC: FusumaViewController) {
+        //
+    }
 
 }
 

@@ -81,7 +81,7 @@
                 <constraint firstAttribute="trailing" secondItem="oUi-qP-Neb" secondAttribute="trailing" id="HM7-dt-RPz"/>
                 <constraint firstItem="oUi-qP-Neb" firstAttribute="top" secondItem="SZ8-Sp-jjd" secondAttribute="bottom" id="KEj-9P-kyb"/>
                 <constraint firstItem="oUi-qP-Neb" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Lpo-QC-qmm"/>
-                <constraint firstItem="SZ8-Sp-jjd" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="50" id="XnG-nk-Wcr"/>
+                <constraint firstItem="SZ8-Sp-jjd" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="60" id="XnG-nk-Wcr"/>
                 <constraint firstAttribute="trailing" secondItem="SZ8-Sp-jjd" secondAttribute="trailing" id="bms-F5-8H5"/>
                 <constraint firstItem="SZ8-Sp-jjd" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="x7t-wb-WiH"/>
             </constraints>
