@@ -107,6 +107,9 @@ public struct ImageMetadata {
 //@objc public class FusumaViewController: UIViewController, FSCameraViewDelegate, FSAlbumViewDelegate {
 public class FusumaViewController: UIViewController {
     
+    // Determine whether or not to reposition ImageCropContainer for better UI
+    var shouldRepositionImageCropContainerOnViewDisapper = true
+    
     /// a singleton shared instance
     public static let shared = FusumaViewController()
 
@@ -295,8 +298,6 @@ public class FusumaViewController: UIViewController {
                 highlightButton(videoButton)
             }
         }
-        
-        self.albumView.imageCropViewContainer.isHidden = false
     }
 
     override public func viewDidAppear(_ animated: Bool) {
@@ -322,8 +323,16 @@ public class FusumaViewController: UIViewController {
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.stopAll()
-        self.albumView.imageCropViewContainer.isHidden = true
         self.changeMode(.library)
+        
+        if self.shouldRepositionImageCropContainerOnViewDisapper {
+            // reposition imageCropContainer for better UI purpose.
+            self.albumView.imageCropViewConstraintTop.constant = self.albumView.imageCropViewOriginalConstraintTop
+        }
+    }
+    
+    public override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
     }
 
     override public var prefersStatusBarHidden : Bool {
@@ -589,13 +598,12 @@ private extension FusumaViewController {
         
         button.addBottomBorder(fusumaTintColor, width: 3)
     }
-    
-    
 }
 
 extension FusumaViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func accessPhotosLib() {
+        
         let status = PHPhotoLibrary.authorizationStatus()
         
         if status == .authorized {
@@ -622,11 +630,15 @@ extension FusumaViewController: UIImagePickerControllerDelegate, UINavigationCon
         
         self.delegate?.fusumaWillPresentPhotosLib(self)
         
+        self.shouldRepositionImageCropContainerOnViewDisapper = false
+        
         imagePicker.mediaTypes = types
         self.present(imagePicker, animated: true, completion: nil)
     }
     
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        self.shouldRepositionImageCropContainerOnViewDisapper = true
         
         if let assertURL = info[UIImagePickerControllerReferenceURL] as? URL {
             let fetchResult = PHAsset.fetchAssets(withALAssetURLs: [assertURL], options: nil)
@@ -644,6 +656,7 @@ extension FusumaViewController: UIImagePickerControllerDelegate, UINavigationCon
     }
     
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        self.shouldRepositionImageCropContainerOnViewDisapper = true
         picker.dismiss(animated: true, completion: {
             self.delegate?.fusumaDidDismissPhotosLib(self)
         })
