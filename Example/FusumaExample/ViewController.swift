@@ -30,7 +30,7 @@ class ViewController: UIViewController, FusumaDelegate {
     
     @IBAction func showButtonPressed(_ sender: AnyObject) {
         // Show Fusuma
-        let fusuma = FusumaViewController()
+        let fusuma = FusumaViewController.shared
         
         //        fusumaCropImage = false
         

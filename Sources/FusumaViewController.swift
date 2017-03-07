@@ -295,6 +295,8 @@ public class FusumaViewController: UIViewController {
                 highlightButton(videoButton)
             }
         }
+        
+        self.albumView.imageCropViewContainer.isHidden = false
     }
 
     override public func viewDidAppear(_ animated: Bool) {
@@ -315,8 +317,6 @@ public class FusumaViewController: UIViewController {
             videoView.layoutIfNeeded()
             videoView.initialize()
         }
-        
-        self.albumView.imageCropViewContainer.isHidden = false
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
