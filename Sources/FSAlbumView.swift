@@ -77,6 +77,10 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         panGesture.delegate = self
         self.addGestureRecognizer(panGesture)
         
+        let doubleTappedOnImageCropContainer = UITapGestureRecognizer(target: self, action: #selector(self.doubleTappedImageCropContainer(_:)))
+        doubleTappedOnImageCropContainer.numberOfTapsRequired = 2
+        self.imageCropViewContainer.addGestureRecognizer(doubleTappedOnImageCropContainer)
+        
         collectionViewConstraintHeight.constant = self.frame.height - imageCropViewContainer.frame.height - imageCropViewOriginalConstraintTop
         imageCropViewConstraintTop.constant = 60
         dragDirection = Direction.up
@@ -122,6 +126,14 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         
         return true
+    }
+    
+    func doubleTappedImageCropContainer(_ gr: UITapGestureRecognizer) {
+        if gr.state == .ended {
+            if let asset = self.phAsset {
+                self.changeImage(asset)
+            }
+        }
     }
     
     func panned(_ sender: UITapGestureRecognizer) {
