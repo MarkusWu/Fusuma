@@ -323,8 +323,6 @@ public class FusumaViewController: UIViewController {
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.stopAll()
-        self.changeMode(.library)
-        
         if self.shouldRepositionImageCropContainerOnViewDisapper {
             // reposition imageCropContainer for better UI purpose.
             self.albumView.imageCropViewConstraintTop.constant = self.albumView.imageCropViewOriginalConstraintTop
@@ -333,6 +331,7 @@ public class FusumaViewController: UIViewController {
     
     public override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        self.changeMode(.library)
     }
 
     override public var prefersStatusBarHidden : Bool {
