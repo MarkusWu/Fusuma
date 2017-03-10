@@ -67,6 +67,8 @@ public var fusumaFlashOffImage : UIImage? = nil
 public var fusumaFlipImage : UIImage? = nil
 public var fusumaShotImage : UIImage? = nil
 
+public var fusumaStartingMode: FusumaMode = .library
+
 public var fusumaVideoStartImage : UIImage? = nil
 public var fusumaVideoStopImage : UIImage? = nil
 
@@ -118,7 +120,7 @@ public class FusumaViewController: UIViewController {
     public var hasVideo = false
     public var cropHeightRatio: CGFloat = 1
     
-    var mode: FusumaMode = .camera
+    var mode: FusumaMode!
     public var modeOrder: FusumaModeOrder = .libraryFirst
     var willFilter = true
     
@@ -141,8 +143,6 @@ public class FusumaViewController: UIViewController {
     lazy var albumView  = FSAlbumView.instance()
     lazy var cameraView = FSCameraView.instance()
     lazy var videoView = FSVideoCameraView.instance()
-    
-    private var neverUpdateHighlightButtonOnViewAppear = true
     
     fileprivate var hasGalleryPermission: Bool {
         return PHPhotoLibrary.authorizationStatus() == .authorized
@@ -235,7 +235,7 @@ public class FusumaViewController: UIViewController {
         libraryButton.clipsToBounds = true
         videoButton.clipsToBounds = true
         
-        changeMode(FusumaMode.library)
+        changeMode(fusumaStartingMode)
         
         photoLibraryViewerContainer.addSubview(albumView)
         cameraShotContainer.addSubview(cameraView)
@@ -287,18 +287,10 @@ public class FusumaViewController: UIViewController {
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // high light button again for better UI
-        if neverUpdateHighlightButtonOnViewAppear {
-            self.neverUpdateHighlightButtonOnViewAppear = false
-            
-            switch self.mode {
-            case .library:
-                highlightButton(libraryButton)
-            case .camera:
-                highlightButton(cameraButton)
-            case .video:
-                highlightButton(videoButton)
-            }
+        if self.mode == .camera {
+            self.cameraView.startCamera()
+        } else if self.mode == .video {
+            self.videoView.startCamera()
         }
     }
     
@@ -333,7 +325,6 @@ public class FusumaViewController: UIViewController {
     
     public override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        self.changeMode(.library)
     }
     
     override public var prefersStatusBarHidden : Bool {
@@ -490,14 +481,16 @@ private extension FusumaViewController {
             return
         }
         
-        //operate this switch before changing mode to stop cameras
-        switch self.mode {
-        case .library:
-            break
-        case .camera:
-            self.cameraView.stopCamera()
-        case .video:
-            self.videoView.stopCamera()
+        if self.mode != nil {
+            //operate this switch before changing mode to stop cameras
+            switch self.mode! {
+            case .library:
+                break
+            case .camera:
+                self.cameraView.stopCamera()
+            case .video:
+                self.videoView.stopCamera()
+            }
         }
         
         self.mode = mode
@@ -538,11 +531,13 @@ private extension FusumaViewController {
             return
         }
         
-        switch self.mode {
-        case .library:
-            self.doneButton.isHidden = false
-        default:
-            self.doneButton.isHidden = true
+        if let mode = self.mode {
+            switch mode {
+            case .library:
+                self.doneButton.isHidden = false
+            default:
+                self.doneButton.isHidden = true
+            }
         }
     }
     
