@@ -39,7 +39,7 @@ Add `pod 'Fusuma'` to your `Podfile` and run `pod install`. Also add `use_framew
 
 ```
 use_frameworks!
-pod 'Fusuma', :git => 'https://github.com/Markuswu/Fusuma.git'
+pod 'Fusuma', :git => 'https://github.com/MarkusWu/Fusuma.git'
 ```
 
 #### Using [Carthage](https://github.com/Carthage/Carthage)
