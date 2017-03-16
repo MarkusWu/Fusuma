@@ -112,6 +112,8 @@ public class FusumaViewController: UIViewController {
     // Determine whether or not to reposition ImageCropContainer for better UI
     var shouldRepositionImageCropContainerOnViewDisapper = true
     
+    private var neverUpdateHighlightButtonOnViewAppear = true
+    
     /// a singleton shared instance
     public static let shared = FusumaViewController()
     
@@ -291,6 +293,23 @@ public class FusumaViewController: UIViewController {
             self.cameraView.startCamera()
         } else if self.mode == .video {
             self.videoView.startCamera()
+        }
+        
+        // high light button again for better UI
+        if neverUpdateHighlightButtonOnViewAppear {
+            if self.mode != nil {
+                
+                self.neverUpdateHighlightButtonOnViewAppear = false
+                
+                switch self.mode! {
+                case .library:
+                    highlightButton(libraryButton)
+                case .camera:
+                    highlightButton(cameraButton)
+                case .video:
+                    highlightButton(videoButton)
+                }
+            }
         }
     }
     
