@@ -12,7 +12,7 @@ import Photos
 @objc public protocol FSAlbumViewDelegate: class {
     // Returns height ratio of crop image. e.g) 4:3 -> 7.5
     func getCropHeightRatio() -> CGFloat
-
+    
     func albumViewCameraRollUnauthorized()
     func albumViewCameraRollAuthorized()
 }
@@ -25,7 +25,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     
     @IBOutlet weak var collectionViewConstraintHeight: NSLayoutConstraint!
     @IBOutlet weak var imageCropViewConstraintTop: NSLayoutConstraint!
-
+    
     weak var delegate: FSAlbumViewDelegate? = nil
     
     var images: PHFetchResult<PHAsset>!
@@ -63,9 +63,9 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
             
             return
         }
-		
-		self.isHidden = false
-
+        
+        self.isHidden = false
+        
         // Set Image Crop Ratio
         if let heightRatio = delegate?.getCropHeightRatio() {
             imageCropViewContainer.addConstraint(NSLayoutConstraint(item: imageCropViewContainer, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: imageCropViewContainer, attribute: NSLayoutAttribute.width, multiplier: heightRatio, constant: 0)
@@ -91,8 +91,8 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         imageCropViewContainer.layer.shadowOffset  = CGSize.zero
         
         collectionView.register(UINib(nibName: "FSAlbumViewCell", bundle: Bundle(for: self.classForCoder)), forCellWithReuseIdentifier: "FSAlbumViewCell")
-		collectionView.backgroundColor = fusumaBackgroundColor
-		
+        collectionView.backgroundColor = fusumaBackgroundColor
+        
         // Never load photos Unless the user allows to access to photo album
         checkPhotoAuth()
         
@@ -104,12 +104,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
         images = PHAsset.fetchAssets(with: .image, options: options)
         
-        if images.count > 0 {
-            
-            changeImage(images[0])
-            collectionView.reloadData()
-            collectionView.selectItem(at: IndexPath(row: 0, section: 0), animated: false, scrollPosition: UICollectionViewScrollPosition())
-        }
+        self.selectImage(at: 0)
         
         PHPhotoLibrary.shared().register(self)
         
@@ -120,6 +115,19 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         if PHPhotoLibrary.authorizationStatus() == PHAuthorizationStatus.authorized {
             
             PHPhotoLibrary.shared().unregisterChangeObserver(self)
+        }
+    }
+    
+    func selectImage(at indexNumber: Int) {
+        if images.count > indexNumber {
+            
+            changeImage(images[indexNumber])
+            collectionView.reloadData()
+            
+            collectionView.selectItem(at: IndexPath(row: indexNumber, section: 0), animated: false, scrollPosition: .top)
+            
+            imageCropView.changeScrollable(true)
+            dragDirection = .up
         }
     }
     
@@ -144,15 +152,22 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
             let loc     = sender.location(in: view)
             let subview = view?.hitTest(loc, with: nil)
             
-            if subview == imageCropView && imageCropViewConstraintTop.constant == imageCropViewOriginalConstraintTop {
-                // if the pan starts in the image field, don't let this touch start dragging the album, since it's a crop gesture
-                canPanDuringThisTouch = false
-                return
-            }
-            
             dragStartPos = sender.location(in: self)
             
             cropBottomY = self.imageCropViewContainer.frame.origin.y + self.imageCropViewContainer.frame.height
+            
+            if subview == imageCropView && imageCropViewConstraintTop.constant == imageCropViewOriginalConstraintTop {
+                // if the pan starts in the image field, don't let this touch start dragging the album, since it's a crop gesture
+                
+                if abs(dragStartPos.y - cropBottomY) < 20 {
+                    canPanDuringThisTouch = true
+                } else {
+                    canPanDuringThisTouch = false
+                }
+                
+                
+                return
+            }
             
             // Move
             if dragDirection == Direction.stop {
@@ -163,17 +178,21 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
             // Scroll event of CollectionView is preferred.
             if (dragDirection == Direction.up   && dragStartPos.y < cropBottomY + dragDiff) ||
                 (dragDirection == Direction.down && dragStartPos.y > cropBottomY) {
-                    
-                    dragDirection = Direction.stop
-                    
-                    imageCropView.changeScrollable(false)
-                    
+                
+                dragDirection = Direction.stop
+                
+                imageCropView.changeScrollable(false)
+                
             } else {
                 
                 imageCropView.changeScrollable(true)
             }
             
         } else if sender.state == UIGestureRecognizerState.changed {
+            
+            if !canPanDuringThisTouch {
+                return
+            }
             
             let currentPos = sender.location(in: self)
             
@@ -229,7 +248,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
                     
                     self.layoutIfNeeded()
                     
-                    }, completion: nil)
+                }, completion: nil)
                 
                 dragDirection = Direction.down
                 
@@ -245,7 +264,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
                     
                     self.layoutIfNeeded()
                     
-                    }, completion: nil)
+                }, completion: nil)
                 
                 dragDirection = Direction.up
                 
@@ -266,15 +285,15 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
         let asset = self.images[(indexPath as NSIndexPath).item]
         self.imageManager?.requestImage(for: asset,
-            targetSize: cellSize,
-            contentMode: .aspectFill,
-            options: nil) {
-                result, info in
-                
-                if cell.tag == currentTag {
-                    cell.image = result
-                }
-                
+                                        targetSize: cellSize,
+                                        contentMode: .aspectFill,
+                                        options: nil) {
+                                            result, info in
+                                            
+                                            if cell.tag == currentTag {
+                                                cell.image = result
+                                            }
+                                            
         }
         
         return cell
@@ -309,7 +328,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
             
             self.layoutIfNeeded()
             
-            }, completion: nil)
+        }, completion: nil)
         
         dragDirection = Direction.up
         collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
@@ -356,7 +375,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
                         if (changedIndexes?.count ?? 0) != 0 {
                             collectionView.reloadItems(at: changedIndexes!.aapl_indexPathsFromIndexesWithSection(0))
                         }
-                        }, completion: nil)
+                    }, completion: nil)
                 }
                 
                 self.resetCachedAssets()
@@ -405,16 +424,16 @@ extension FSAlbumView {
             options.isNetworkAccessAllowed = true
             
             self.imageManager?.requestImage(for: asset,
-                targetSize: CGSize(width: asset.pixelWidth, height: asset.pixelHeight),
-                contentMode: .aspectFill,
-                options: options) {
-                    result, info in
-                    
-                    DispatchQueue.main.async(execute: {
-                        
-                        self.imageCropView.imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
-                        self.imageCropView.image = result
-                    })
+                                            targetSize: CGSize(width: asset.pixelWidth, height: asset.pixelHeight),
+                                            contentMode: .aspectFill,
+                                            options: options) {
+                                                result, info in
+                                                
+                                                DispatchQueue.main.async(execute: {
+                                                    
+                                                    self.imageCropView.imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                                                    self.imageCropView.image = result
+                                                })
             }
         })
     }
@@ -446,7 +465,7 @@ extension FSAlbumView {
             }
         }
     }
-
+    
     // MARK: - Asset Caching
     
     func resetCachedAssets() {
@@ -454,7 +473,7 @@ extension FSAlbumView {
         imageManager?.stopCachingImagesForAllAssets()
         previousPreheatRect = CGRect.zero
     }
- 
+    
     func updateCachedAssets() {
         
         var preheatRect = self.collectionView!.bounds
@@ -469,22 +488,22 @@ extension FSAlbumView {
             self.computeDifferenceBetweenRect(self.previousPreheatRect, andRect: preheatRect, removedHandler: {removedRect in
                 let indexPaths = self.collectionView.aapl_indexPathsForElementsInRect(removedRect)
                 removedIndexPaths += indexPaths
-                }, addedHandler: {addedRect in
-                    let indexPaths = self.collectionView.aapl_indexPathsForElementsInRect(addedRect)
-                    addedIndexPaths += indexPaths
+            }, addedHandler: {addedRect in
+                let indexPaths = self.collectionView.aapl_indexPathsForElementsInRect(addedRect)
+                addedIndexPaths += indexPaths
             })
             
             let assetsToStartCaching = self.assetsAtIndexPaths(addedIndexPaths)
             let assetsToStopCaching = self.assetsAtIndexPaths(removedIndexPaths)
             
             self.imageManager?.startCachingImages(for: assetsToStartCaching,
-                targetSize: cellSize,
-                contentMode: .aspectFill,
-                options: nil)
+                                                  targetSize: cellSize,
+                                                  contentMode: .aspectFill,
+                                                  options: nil)
             self.imageManager?.stopCachingImages(for: assetsToStopCaching,
-                targetSize: cellSize,
-                contentMode: .aspectFill,
-                options: nil)
+                                                 targetSize: cellSize,
+                                                 contentMode: .aspectFill,
+                                                 options: nil)
             
             self.previousPreheatRect = preheatRect
         }

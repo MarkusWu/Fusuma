@@ -316,7 +316,10 @@ public class FusumaViewController: UIViewController {
     
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+        self.setUpAllViews()
+    }
+    
+    public func setUpAllViews() {
         albumView.frame  = CGRect(origin: CGPoint.zero, size: photoLibraryViewerContainer.frame.size)
         albumView.layoutIfNeeded()
         cameraView.frame = CGRect(origin: CGPoint.zero, size: cameraShotContainer.frame.size)
@@ -332,6 +335,10 @@ public class FusumaViewController: UIViewController {
             videoView.layoutIfNeeded()
             videoView.initialize()
         }
+    }
+    
+    public func selectLibImage(at indexNumber: Int) {
+        self.albumView.selectImage(at: indexNumber)
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
@@ -359,7 +366,7 @@ public class FusumaViewController: UIViewController {
         })
     }
     
-    @IBAction func libraryButtonPressed(_ sender: UIButton) {
+    @IBAction public func libraryButtonPressed(_ sender: UIButton?) {
         
         changeMode(FusumaMode.library)
     }
