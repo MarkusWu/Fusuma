@@ -124,6 +124,10 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
             changeImage(images[indexNumber])
             collectionView.reloadData()
             
+            for indexPath in collectionView.indexPathsForSelectedItems ?? [] {
+                collectionView.deselectItem(at: indexPath, animated: false)
+            }
+            
             collectionView.selectItem(at: IndexPath(row: indexNumber, section: 0), animated: false, scrollPosition: .top)
             
             imageCropView.changeScrollable(true)

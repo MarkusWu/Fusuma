@@ -147,6 +147,8 @@ public class FusumaViewController: UIViewController {
     lazy var cameraView = FSCameraView.instance()
     lazy var videoView = FSVideoCameraView.instance()
     
+    public var preferredModeOnWillAppear: FusumaMode?
+    
     fileprivate var hasGalleryPermission: Bool {
         return PHPhotoLibrary.authorizationStatus() == .authorized
     }
@@ -289,6 +291,10 @@ public class FusumaViewController: UIViewController {
     
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        if self.preferredModeOnWillAppear != nil {
+            self.changeMode(self.preferredModeOnWillAppear!)
+        }
         
         if self.mode == .camera {
             self.cameraView.startCamera()
