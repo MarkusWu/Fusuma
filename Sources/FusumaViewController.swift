@@ -242,6 +242,8 @@ public class FusumaViewController: UIViewController {
         
         changeMode(fusumaStartingMode)
         
+        self.preferredModeOnWillAppear = fusumaStartingMode
+        
         photoLibraryViewerContainer.addSubview(albumView)
         cameraShotContainer.addSubview(cameraView)
         videoShotContainer.addSubview(videoView)
