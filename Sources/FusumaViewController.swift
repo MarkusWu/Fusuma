@@ -374,16 +374,20 @@ public class FusumaViewController: UIViewController {
     
     @IBAction public func libraryButtonPressed(_ sender: UIButton?) {
         
+        if sender != nil {
+            self.preferredModeOnWillAppear = .library
+        }
+        
         changeMode(FusumaMode.library)
     }
     
     @IBAction func photoButtonPressed(_ sender: UIButton) {
-        
+        self.preferredModeOnWillAppear = .camera
         changeMode(FusumaMode.camera)
     }
     
     @IBAction func videoButtonPressed(_ sender: UIButton) {
-        
+        self.preferredModeOnWillAppear = .video
         changeMode(FusumaMode.video)
     }
     
