@@ -42,16 +42,16 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     func fusumaWillPresentPhotosLib(_ fusumaVC: FusumaViewController)
     func fusumaDidDismissPhotosLib(_ fusumaVC: FusumaViewController)
     
-    /// Call when close button is tapped. Note: if you want fusuma to handle the dismissal, return ture. Otherwise, return false.
-    /// - returns: True, if auto dismissal; false, if you want to handle the dismissal yourself.
-    func fusumaShouldDismiss(_ fusumaVC: FusumaViewController, onDidTapClose button: UIButton) -> Bool
+    func fusuma(_ fusumaVC: FusumaViewController, didTapClose button: UIButton)
 }
 
 public extension FusumaDelegate {
     func fusumaImageSelected(_ image: UIImage, source: FusumaMode, metaData: ImageMetadata) {}
     func fusumaDismissedWithImage(_ image: UIImage, source: FusumaMode) {}
-    func fusumaShouldDismiss(_ fusumaVC: FusumaViewController, onDidTapClose button: UIButton) -> Bool {
-        return true
+    
+    /// Call when close button is tapped. Note: if you want to implement this method, make sure you handle fusuma dismissal yourself.
+    func fusumaShouldDismiss(_ fusumaVC: FusumaViewController, didTapClose button: UIButton) {
+        fusumaVC.dismiss(animated: fusumaVC.animatedOnDismiss, completion: nil)
     }
 }
 
@@ -373,13 +373,10 @@ public class FusumaViewController: UIViewController {
     
     @IBAction func closeButtonPressed(_ sender: UIButton) {
         
-        if self.delegate != nil {
-            let autoDimiss = self.delegate!.fusumaShouldDismiss(self, onDidTapClose: sender)
-            if autoDimiss {
-                self.dismiss(animated: self.animatedOnDismiss, completion: nil)
-            }
-        } else {
+        if self.delegate == nil {
             self.dismiss(animated: self.animatedOnDismiss, completion: nil)
+        } else {
+            self.delegate?.fusuma(self, didTapClose: sender)
         }
     }
     
