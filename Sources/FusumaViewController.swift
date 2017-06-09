@@ -50,7 +50,7 @@ public extension FusumaDelegate {
     func fusumaDismissedWithImage(_ image: UIImage, source: FusumaMode) {}
     
     /// Call when close button is tapped. Note: if you want to implement this method, make sure you handle fusuma dismissal yourself.
-    func fusumaShouldDismiss(_ fusumaVC: FusumaViewController, didTapClose button: UIButton) {
+    func fusuma(_ fusumaVC: FusumaViewController, didTapClose button: UIButton) {
         fusumaVC.dismiss(animated: fusumaVC.animatedOnDismiss, completion: nil)
     }
 }
