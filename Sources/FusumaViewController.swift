@@ -32,23 +32,27 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
 
 
 @objc public protocol FusumaDelegate: class {
-    // MARK: Required
+    // MARK: - Required
     func fusumaImageSelected(_ image: UIImage, source: FusumaMode)
     func fusumaVideoCompleted(withFileURL fileURL: URL)
     func fusumaCameraRollUnauthorized()
     
+    // MARK: - Optional
     func fusumaDismissedWithImage(_ image: UIImage, source: FusumaMode)
-    func fusumaClosed()
-    func fusumaWillClosed()
     func fusumaWillPresentPhotosLib(_ fusumaVC: FusumaViewController)
     func fusumaDidDismissPhotosLib(_ fusumaVC: FusumaViewController)
+    
+    /// Call when close button is tapped. Note: if you want fusuma to handle the dismissal, return ture. Otherwise, return false.
+    /// - returns: True, if auto dismissal; false, if you want to handle the dismissal yourself.
+    func fusumaShouldDismiss(_ fusumaVC: FusumaViewController, onDidTapClose button: UIButton) -> Bool
 }
 
 public extension FusumaDelegate {
     func fusumaImageSelected(_ image: UIImage, source: FusumaMode, metaData: ImageMetadata) {}
     func fusumaDismissedWithImage(_ image: UIImage, source: FusumaMode) {}
-    func fusumaClosed() {}
-    func fusumaWillClosed() {}
+    func fusumaShouldDismiss(_ fusumaVC: FusumaViewController, onDidTapClose button: UIButton) -> Bool {
+        return true
+    }
 }
 
 public var fusumaBaseTintColor   = UIColor.hex("#FFFFFF", alpha: 1.0)
@@ -368,10 +372,15 @@ public class FusumaViewController: UIViewController {
     }
     
     @IBAction func closeButtonPressed(_ sender: UIButton) {
-        self.delegate?.fusumaWillClosed()
-        self.dismiss(animated: self.animatedOnDismiss, completion: {
-            self.delegate?.fusumaClosed()
-        })
+        
+        if self.delegate != nil {
+            let autoDimiss = self.delegate!.fusumaShouldDismiss(self, onDidTapClose: sender)
+            if autoDimiss {
+                self.dismiss(animated: self.animatedOnDismiss, completion: nil)
+            }
+        } else {
+            self.dismiss(animated: self.animatedOnDismiss, completion: nil)
+        }
     }
     
     @IBAction public func libraryButtonPressed(_ sender: UIButton?) {
