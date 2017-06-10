@@ -120,7 +120,19 @@ public class FusumaViewController: UIViewController {
     private var neverUpdateHighlightButtonOnViewAppear = true
     
     /// a singleton shared instance
-    public static let shared = FusumaViewController()
+    private static var instance: FusumaViewController?
+    
+    public static var shared: FusumaViewController {
+        if self.instance == nil {
+           self.instance = FusumaViewController()
+        }
+        
+        return self.instance!
+    }
+    
+    public static func disposeShared() {
+        self.instance = nil
+    }
     
     public var animatedOnDismiss = true
     
