@@ -134,7 +134,7 @@ public class FusumaViewController: UIViewController {
         self.instance = nil
     }
     
-    public static var isSharedInstanceIsInitiated: Bool {
+    public static var isSharedInstanceInitiated: Bool {
         return self.instance != nil
     }
     
