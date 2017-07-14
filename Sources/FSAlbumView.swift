@@ -360,7 +360,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
                 
                 let collectionView = self.collectionView!
                 
-                if !collectionChanges!.hasIncrementalChanges || collectionChanges!.hasMoves {
+                if !collectionChanges!.hasIncrementalChanges || collectionChanges!.hasMoves || (collectionChanges!.removedIndexes != nil) {
                     
                     collectionView.reloadData()
                     
