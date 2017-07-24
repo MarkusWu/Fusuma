@@ -30,12 +30,16 @@ class ViewController: UIViewController, FusumaDelegate {
     
     @IBAction func showButtonPressed(_ sender: AnyObject) {
         // Show Fusuma
+        
+        fusumaPhotoEditable = true
+        fusumaImageOverlayBrightness = 0.88
+        
         let fusuma = FusumaViewController.shared
         
         //        fusumaCropImage = false
         
         fusuma.delegate = self
-        fusuma.cropHeightRatio = 0.6
+        fusuma.cropHeightRatio = 1.0
         fusumaSavesImage = true
 
         self.present(fusuma, animated: true, completion: nil)

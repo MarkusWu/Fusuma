@@ -24,6 +24,10 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     @IBOutlet weak var imageCropView: FSImageCropView!
     @IBOutlet weak var imageCropViewContainer: UIView!
     
+    @IBOutlet weak var brightnessSlider: UISlider!
+    @IBOutlet weak var brightnessLessButton: UIButton!
+    @IBOutlet weak var brightnessMoreButton: UIButton!
+    
     @IBOutlet weak var collectionViewConstraintHeight: NSLayoutConstraint!
     @IBOutlet weak var imageCropViewConstraintTop: NSLayoutConstraint!
     
@@ -116,6 +120,22 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         if PHPhotoLibrary.authorizationStatus() == PHAuthorizationStatus.authorized {
             
             PHPhotoLibrary.shared().unregisterChangeObserver(self)
+        }
+    }
+    
+    func initializePhotoEditor() {
+        
+        let hide = !fusumaPhotoEditable
+        
+        self.brightnessSlider.isHidden = hide
+        self.brightnessLessButton.isHidden = hide
+        self.brightnessMoreButton.isHidden = hide
+        self.imageCropOverlay.isHidden = hide
+        
+        if !hide {
+            self.brightnessSlider.tintColor = fusumaTintColor
+            self.brightnessSlider.value = fusumaImageOverlayBrightness
+            self.imageCropOverlay.backgroundColor = UIColor.black.withAlphaComponent(CGFloat(1 - fusumaImageOverlayBrightness))
         }
     }
     
@@ -279,6 +299,14 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
     }
     
+    // MARK: - User interactions
+    
+    @IBAction func brightnessSliderValueDidChange(_ sender: UISlider) {
+        
+        let value = CGFloat(1 - sender.value)
+        
+        self.imageCropOverlay.backgroundColor = UIColor.black.withAlphaComponent(value)
+    }
     
     // MARK: - UICollectionViewDelegate Protocol
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

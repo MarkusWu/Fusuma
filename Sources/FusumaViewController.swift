@@ -69,6 +69,9 @@ public var fusumaAutoDismiss = true
 
 public var fusumaStartingMode: FusumaMode = .library
 
+public var fusumaPhotoEditable: Bool = false
+public var fusumaImageOverlayBrightness: Float = 0.45
+
 public var fusumaVideoStartImage : UIImage? = nil
 public var fusumaVideoStopImage : UIImage? = nil
 
@@ -185,6 +188,7 @@ public class FusumaViewController: UIViewController {
         
         cameraView.delegate = self
         albumView.delegate  = self
+        albumView.initializePhotoEditor()
         videoView.delegate = self
         
         menuView.backgroundColor = fusumaBackgroundColor

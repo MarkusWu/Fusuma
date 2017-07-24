@@ -54,18 +54,52 @@
                             <rect key="frame" x="0.0" y="0.0" width="400" height="400"/>
                             <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.45000000000000001" colorSpace="calibratedRGB"/>
                         </view>
+                        <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xim-a7-GDY">
+                            <rect key="frame" x="70" y="12" width="22" height="22"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="22" id="4md-Ms-Jnv"/>
+                                <constraint firstAttribute="height" constant="22" id="Lgh-vw-HT4"/>
+                            </constraints>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <state key="normal" image="brightness_less"/>
+                        </button>
+                        <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2mB-gI-d9u">
+                            <rect key="frame" x="308" y="10.5" width="25" height="25"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="25" id="YsT-u3-45k"/>
+                                <constraint firstAttribute="height" constant="25" id="mCW-g1-23K"/>
+                            </constraints>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <state key="normal" image="brightness_more"/>
+                        </button>
+                        <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="SdH-Ok-YOx">
+                            <rect key="frame" x="98" y="8" width="204" height="31"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="200" id="Vqc-hI-bNG"/>
+                                <constraint firstAttribute="height" constant="30" id="zJd-H5-F7J"/>
+                            </constraints>
+                            <connections>
+                                <action selector="brightnessSliderValueDidChange:" destination="iN0-l3-epB" eventType="valueChanged" id="Fui-tk-MOO"/>
+                            </connections>
+                        </slider>
                     </subviews>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstItem="Mc5-1c-z7q" firstAttribute="leading" secondItem="90B-0c-ych" secondAttribute="leading" id="1DN-yd-Kyl"/>
                         <constraint firstAttribute="bottom" secondItem="Mc5-1c-z7q" secondAttribute="bottom" id="1Yc-V1-EBB"/>
                         <constraint firstItem="Fpm-ZY-g5b" firstAttribute="top" secondItem="Mc5-1c-z7q" secondAttribute="top" id="2se-JJ-8yv"/>
+                        <constraint firstItem="2mB-gI-d9u" firstAttribute="leading" secondItem="SdH-Ok-YOx" secondAttribute="trailing" constant="8" id="3sO-cL-Jg6"/>
                         <constraint firstItem="Mc5-1c-z7q" firstAttribute="top" secondItem="90B-0c-ych" secondAttribute="top" id="Jn1-QR-IAN"/>
                         <constraint firstItem="Fpm-ZY-g5b" firstAttribute="bottom" secondItem="Mc5-1c-z7q" secondAttribute="bottom" id="Uci-5r-hcF"/>
+                        <constraint firstItem="2mB-gI-d9u" firstAttribute="centerY" secondItem="SdH-Ok-YOx" secondAttribute="centerY" id="VFx-DF-H6H"/>
                         <constraint firstItem="Fpm-ZY-g5b" firstAttribute="trailing" secondItem="Mc5-1c-z7q" secondAttribute="trailing" id="cip-Ey-aKf"/>
                         <constraint firstAttribute="width" secondItem="90B-0c-ych" secondAttribute="height" multiplier="1:1" priority="750" id="coZ-5v-rE3"/>
+                        <constraint firstItem="SdH-Ok-YOx" firstAttribute="centerX" secondItem="90B-0c-ych" secondAttribute="centerX" id="eTf-nS-yiR"/>
+                        <constraint firstItem="xim-a7-GDY" firstAttribute="centerY" secondItem="SdH-Ok-YOx" secondAttribute="centerY" id="edY-lf-YXx"/>
+                        <constraint firstItem="SdH-Ok-YOx" firstAttribute="leading" secondItem="xim-a7-GDY" secondAttribute="trailing" constant="8" id="gWc-2C-KIY"/>
                         <constraint firstItem="Fpm-ZY-g5b" firstAttribute="leading" secondItem="Mc5-1c-z7q" secondAttribute="leading" id="kWL-Gd-kkL"/>
                         <constraint firstAttribute="trailing" secondItem="Mc5-1c-z7q" secondAttribute="trailing" id="sKD-NK-t20"/>
+                        <constraint firstItem="SdH-Ok-YOx" firstAttribute="top" secondItem="90B-0c-ych" secondAttribute="top" constant="8" id="tcf-CT-Sua"/>
                     </constraints>
                 </view>
             </subviews>
@@ -82,6 +116,9 @@
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
+                <outlet property="brightnessLessButton" destination="xim-a7-GDY" id="NgX-EC-zLP"/>
+                <outlet property="brightnessMoreButton" destination="2mB-gI-d9u" id="D71-J6-MnR"/>
+                <outlet property="brightnessSlider" destination="SdH-Ok-YOx" id="8Xd-H1-htR"/>
                 <outlet property="collectionView" destination="6id-Ro-HHC" id="NDT-3i-ayr"/>
                 <outlet property="collectionViewConstraintHeight" destination="ofF-eS-Nvv" id="wTG-jf-uwE"/>
                 <outlet property="imageCropOverlay" destination="Fpm-ZY-g5b" id="hu4-lT-NEq"/>
@@ -91,4 +128,8 @@
             </connections>
         </view>
     </objects>
+    <resources>
+        <image name="brightness_less" width="30" height="30"/>
+        <image name="brightness_more" width="30" height="30"/>
+    </resources>
 </document>
