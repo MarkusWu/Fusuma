@@ -103,14 +103,6 @@ class ViewController: UIViewController, FusumaDelegate {
         self.present(alert, animated: true, completion: nil)
     }
     
-    func fusumaClosed() {
-        print("Called when the FusumaViewController disappeared")
-    }
-    
-    func fusumaWillClosed() {
-        print("Called when the close button is pressed")
-    }
-    
     func fusumaWillPresentPhotosLib(_ fusumaVC: FusumaViewController) {
         //
     }

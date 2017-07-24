@@ -42,17 +42,12 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     func fusumaWillPresentPhotosLib(_ fusumaVC: FusumaViewController)
     func fusumaDidDismissPhotosLib(_ fusumaVC: FusumaViewController)
     
-    func fusuma(_ fusumaVC: FusumaViewController, didTapClose button: UIButton)
+    @objc optional func fusuma(_ fusumaVC: FusumaViewController, didTapClose button: UIButton)
 }
 
 public extension FusumaDelegate {
     func fusumaImageSelected(_ image: UIImage, source: FusumaMode, metaData: ImageMetadata) {}
     func fusumaDismissedWithImage(_ image: UIImage, source: FusumaMode) {}
-    
-    /// Call when close button is tapped. Note: if you want to implement this method, make sure you handle fusuma dismissal yourself.
-    func fusuma(_ fusumaVC: FusumaViewController, didTapClose button: UIButton) {
-        fusumaVC.dismiss(animated: fusumaVC.animatedOnDismiss, completion: nil)
-    }
 }
 
 public var fusumaBaseTintColor   = UIColor.hex("#FFFFFF", alpha: 1.0)
@@ -392,7 +387,10 @@ public class FusumaViewController: UIViewController {
         if self.delegate == nil {
             self.dismiss(animated: self.animatedOnDismiss, completion: nil)
         } else {
-            self.delegate?.fusuma(self, didTapClose: sender)
+            
+            if self.delegate?.fusuma?(self, didTapClose: sender) == nil {
+                self.dismiss(animated: self.animatedOnDismiss, completion: nil)
+            }
         }
     }
     
