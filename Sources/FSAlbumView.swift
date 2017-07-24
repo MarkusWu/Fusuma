@@ -20,6 +20,7 @@ import Photos
 final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, PHPhotoLibraryChangeObserver, UIGestureRecognizerDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var imageCropOverlay: UIView!
     @IBOutlet weak var imageCropView: FSImageCropView!
     @IBOutlet weak var imageCropViewContainer: UIView!
     
