@@ -143,7 +143,9 @@ public class FusumaViewController: UIViewController {
                 self.previewButton.isHidden = !self.photoEditable
                 
                 if self.photoEditable {
-                    self.previewButton.setImage(#imageLiteral(resourceName: "icon_preview"), for: .normal)
+                    if let image = UIImage(named: "icon_preview", in: Bundle(for: type(of: self)), compatibleWith: nil){
+                        self.previewButton.setImage(image, for: .normal)
+                    }
                 }
             }
         }
@@ -473,10 +475,14 @@ public class FusumaViewController: UIViewController {
     @IBAction func previewButtonTapped(_ sender: UIButton) {
         if self.albumView.brightnessSlider.isHidden {
             self.albumView.hideEditOptions(false)
-            self.previewButton.setImage(#imageLiteral(resourceName: "icon_preview"), for: .normal)
+            if let image = UIImage(named: "icon_preview", in: Bundle(for: type(of: self)), compatibleWith: nil){
+                self.previewButton.setImage(image, for: .normal)
+            }
         } else {
             self.albumView.hideEditOptions(true)
-            self.previewButton.setImage(#imageLiteral(resourceName: "icon_no_preview"), for: .normal)
+            if let image = UIImage(named: "icon_no_preview", in: Bundle(for: type(of: self)), compatibleWith: nil){
+                self.previewButton.setImage(image, for: .normal)
+            }
         }
     }
     
@@ -650,7 +656,9 @@ extension FusumaViewController: FSAlbumViewDelegate, FSCameraViewDelegate, FSVid
         self.previewButton.isEnabled = !flag
         
         if flag {
-            self.previewButton.setImage(#imageLiteral(resourceName: "icon_preview"), for: .normal)
+            if let image = UIImage(named: "icon_preview", in: Bundle(for: type(of: self)), compatibleWith: nil){
+                self.previewButton.setImage(image, for: .normal)
+            }
         }
         
         // this is only for making the text color dim

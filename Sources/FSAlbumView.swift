@@ -219,6 +219,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
         self.hideEditOptions(hide)
         self.imageCropOverlay.isHidden = hide
+        self.textView.isHidden = hide
         
         // make sure the gesture is initiated
         if self.tapOnImageCropContainer != nil {
