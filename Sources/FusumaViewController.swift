@@ -69,7 +69,6 @@ public var fusumaAutoDismiss = true
 
 public var fusumaStartingMode: FusumaMode = .library
 
-public var fusumaPhotoEditable: Bool = false
 public var fusumaImageOverlayBrightness: Float = 0.45
 
 public var fusumaVideoStartImage : UIImage? = nil
@@ -136,6 +135,12 @@ public class FusumaViewController: UIViewController {
         return self.instance != nil
     }
     
+    public var photoEditable: Bool = false {
+        didSet {
+            self.albumView.hidePhotoEditor(!self.photoEditable)
+        }
+    }
+    
     public var animatedOnDismiss = true
     
     public var hasVideo = false
@@ -188,7 +193,6 @@ public class FusumaViewController: UIViewController {
         
         cameraView.delegate = self
         albumView.delegate  = self
-        albumView.initializePhotoEditor()
         videoView.delegate = self
         
         menuView.backgroundColor = fusumaBackgroundColor
@@ -388,6 +392,8 @@ public class FusumaViewController: UIViewController {
     
     @IBAction func closeButtonPressed(_ sender: UIButton) {
         
+        self.view.endEditing(true)
+        
         if self.delegate == nil {
             self.dismiss(animated: self.animatedOnDismiss, completion: nil)
         } else {
@@ -419,6 +425,8 @@ public class FusumaViewController: UIViewController {
     
     @IBAction func doneButtonPressed(_ sender: UIButton) {
         let view = albumView.imageCropView
+        
+        self.view.endEditing(true)
         
         if fusumaCropImage {
             let normalizedX = (view?.contentOffset.x)! / (view?.contentSize.width)!
@@ -531,6 +539,15 @@ extension FusumaViewController: FSAlbumViewDelegate, FSCameraViewDelegate, FSVid
     func videoFinished(withFileURL fileURL: URL) {
         delegate?.fusumaVideoCompleted(withFileURL: fileURL)
         self.dismiss(animated: self.animatedOnDismiss, completion: nil)
+    }
+    
+    public func albumViewAddingText(_ flag: Bool) {
+        self.closeButton.isEnabled = !flag
+        self.doneButton.isEnabled = !flag
+        self.expandArrowButton.isEnabled = !flag
+        // this is only for making the text color dim
+        self.titleLabel.isEnabled = !flag
+        self.titleLabel.isUserInteractionEnabled = !flag
     }
     
 }

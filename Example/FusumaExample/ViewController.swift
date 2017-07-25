@@ -31,10 +31,10 @@ class ViewController: UIViewController, FusumaDelegate {
     @IBAction func showButtonPressed(_ sender: AnyObject) {
         // Show Fusuma
         
-        fusumaPhotoEditable = true
         fusumaImageOverlayBrightness = 0.88
         
         let fusuma = FusumaViewController.shared
+        fusuma.photoEditable = true
         
         //        fusumaCropImage = false
         
@@ -62,12 +62,12 @@ class ViewController: UIViewController, FusumaDelegate {
     func fusumaImageSelected(_ image: UIImage, source: FusumaMode, metaData: ImageMetadata) {
         print("Image mediatype: \(metaData.mediaType)")
         print("Source image size: \(metaData.pixelWidth)x\(metaData.pixelHeight)")
-        print("Creation date: \(metaData.creationDate)")
-        print("Modification date: \(metaData.modificationDate)")
+        print("Creation date: \(String(describing: metaData.creationDate))")
+        print("Modification date: \(String(describing: metaData.modificationDate))")
         print("Video duration: \(metaData.duration)")
         print("Is favourite: \(metaData.isFavourite)")
         print("Is hidden: \(metaData.isHidden)")
-        print("Location: \(metaData.location)")
+        print("Location: \(String(describing: metaData.location))")
     }
 
     func fusumaVideoCompleted(withFileURL fileURL: URL) {

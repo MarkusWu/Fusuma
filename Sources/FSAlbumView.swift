@@ -15,9 +15,11 @@ import Photos
     
     func albumViewCameraRollUnauthorized()
     func albumViewCameraRollAuthorized()
+    
+    func albumViewAddingText(_ flag: Bool)
 }
 
-final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, PHPhotoLibraryChangeObserver, UIGestureRecognizerDelegate {
+final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, PHPhotoLibraryChangeObserver, UIGestureRecognizerDelegate, UITextViewDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var imageCropOverlay: UIView!
@@ -27,6 +29,11 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     @IBOutlet weak var brightnessSlider: UISlider!
     @IBOutlet weak var brightnessLessButton: UIButton!
     @IBOutlet weak var brightnessMoreButton: UIButton!
+    
+    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var textViewOverlay: UIView!
+    
+    private var textViewOrigin: CGPoint?
     
     @IBOutlet weak var collectionViewConstraintHeight: NSLayoutConstraint!
     @IBOutlet weak var imageCropViewConstraintTop: NSLayoutConstraint!
@@ -40,6 +47,60 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     var phAsset: PHAsset!
     
     var canPanDuringThisTouch = true
+    
+    var addingText: Bool = false {
+        didSet {
+            
+            self.textView.textAlignment = .center
+            
+            var origin = CGPoint.zero
+            origin.x = (self.imageCropViewContainer.frame.width - self.textView.frame.width) / 2
+            origin.y = self.imageCropViewContainer.frame.height * 0.20
+            
+            if self.addingText {
+                
+                self.updateTextViewLayoutIfNeeded()
+                
+                self.textViewOverlay.isHidden = false
+                self.textView.isHidden = false
+                
+                self.panOnTextView.isEnabled = false
+                
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.textView.frame.origin = origin
+                }, completion: nil)
+            } else {
+                
+                self.textView.text = (self.textView.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+                
+                self.updateTextViewLayoutIfNeeded()
+                
+                self.textViewOverlay.isHidden = true
+                
+                if self.textView.text == nil || self.textView.text.isEmpty {
+                    self.textView.isHidden = true
+                } else {
+                    self.textView.isHidden = false
+                }
+                
+                self.panOnTextView.isEnabled = true
+                
+                if let pos = self.textViewOrigin {
+                    
+                    UIView.animate(withDuration: 0.3, animations: {
+                        finished in
+                        self.textView.frame.origin = pos
+                    })
+                } else {
+                    self.textView.frame.origin = origin
+                }
+            }
+            
+            self.hideBrightnessOptions(self.addingText)
+            self.imageCropOverlay.isHidden = self.addingText
+            self.delegate?.albumViewAddingText(self.addingText)
+        }
+    }
     
     // Variables for calculating the position
     enum Direction {
@@ -56,6 +117,11 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     var cropBottomY: CGFloat  = 0.0
     var dragStartPos: CGPoint = CGPoint.zero
     let dragDiff: CGFloat     = 20.0
+    
+    private(set) var tapOnImageCropContainer: UITapGestureRecognizer!
+    private(set) var doubleTappedOnImageCropContainer: UITapGestureRecognizer!
+    
+    private(set) var panOnTextView: UIPanGestureRecognizer!
     
     static func instance() -> FSAlbumView {
         
@@ -82,9 +148,23 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         panGesture.delegate = self
         self.addGestureRecognizer(panGesture)
         
-        let doubleTappedOnImageCropContainer = UITapGestureRecognizer(target: self, action: #selector(self.doubleTappedImageCropContainer(_:)))
+        tapOnImageCropContainer = UITapGestureRecognizer(target: self, action: #selector(self.imageCropContainerTapped(_:)))
+        self.imageCropViewContainer.addGestureRecognizer(tapOnImageCropContainer)
+        
+        doubleTappedOnImageCropContainer = UITapGestureRecognizer(target: self, action: #selector(self.doubleTappedImageCropContainer(_:)))
         doubleTappedOnImageCropContainer.numberOfTapsRequired = 2
         self.imageCropViewContainer.addGestureRecognizer(doubleTappedOnImageCropContainer)
+        
+        if self.imageCropOverlay.isHidden {
+            tapOnImageCropContainer.isEnabled = false
+            doubleTappedOnImageCropContainer.isEnabled = true
+        } else {
+            tapOnImageCropContainer.isEnabled = true
+            doubleTappedOnImageCropContainer.isEnabled = false
+        }
+        
+        panOnTextView = UIPanGestureRecognizer(target: self, action: #selector(self.textViewPanned(_:)))
+        self.textView.addGestureRecognizer(panOnTextView)
         
         collectionViewConstraintHeight.constant = self.frame.height - imageCropViewContainer.frame.height - imageCropViewOriginalConstraintTop
         imageCropViewConstraintTop.constant = 60
@@ -113,6 +193,8 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
         PHPhotoLibrary.shared().register(self)
         
+        self.textView.text = ""
+        self.updateTextViewLayoutIfNeeded()
     }
     
     deinit {
@@ -123,20 +205,46 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         }
     }
     
-    func initializePhotoEditor() {
+    func hidePhotoEditor(_ hide: Bool) {
         
-        let hide = !fusumaPhotoEditable
-        
-        self.brightnessSlider.isHidden = hide
-        self.brightnessLessButton.isHidden = hide
-        self.brightnessMoreButton.isHidden = hide
+        self.hideBrightnessOptions(hide)
         self.imageCropOverlay.isHidden = hide
+        
+        // make sure the gesture is initiated
+        if self.tapOnImageCropContainer != nil {
+            if hide {
+                self.tapOnImageCropContainer.isEnabled = false
+                self.doubleTappedOnImageCropContainer.isEnabled = true
+            } else {
+                self.tapOnImageCropContainer.isEnabled = true
+                self.doubleTappedOnImageCropContainer.isEnabled = false
+            }
+        }
         
         if !hide {
             self.brightnessSlider.tintColor = fusumaTintColor
             self.brightnessSlider.value = fusumaImageOverlayBrightness
             self.imageCropOverlay.backgroundColor = UIColor.black.withAlphaComponent(CGFloat(1 - fusumaImageOverlayBrightness))
+            
+            self.textView.delegate = self
         }
+    }
+    
+    func updateTextViewLayoutIfNeeded() {
+        
+        self.textView.frame.size.width = min(self.textView.attributedText.size().width + 20, self.frame.width - 32)
+        
+        self.textView.frame.origin.x = (self.imageCropViewContainer.frame.width - self.textView.frame.width) / 2
+        
+        
+        var height = max(self.textView.contentSize.height + 20, 30)
+        
+        if self.addingText {
+            height = min(160, height)
+        }
+        
+        self.textView.frame.size.height = height
+        
     }
     
     func selectImage(at indexNumber: Int) {
@@ -299,7 +407,53 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
     }
     
+    // MARK: - Utilities
+    
+    func hideBrightnessOptions(_ flag: Bool) {
+        self.brightnessSlider.isHidden = flag
+        self.brightnessLessButton.isHidden = flag
+        self.brightnessMoreButton.isHidden = flag
+    }
+    
     // MARK: - User interactions
+    
+    func textViewPanned(_ gr: UIPanGestureRecognizer) {
+        let translation = gr.translation(in: self.imageCropViewContainer)
+        
+        if gr.state == .began {
+            self.textViewOrigin = self.textView.frame.origin
+        } else if gr.state == .changed {
+            
+            guard let startPos = self.textViewOrigin else {
+                return
+            }
+            
+            let x = startPos.x + translation.x
+            let y = startPos.y + translation.y
+            
+           //x = min(max(0, x), self.imageCropViewContainer.frame.width)
+           //y = min(max(0, y), self.imageCropViewContainer.frame.height)
+            
+            self.textView.frame.origin.x = x
+            self.textView.frame.origin.y = y
+        } else if gr.state == .ended || gr.state == .cancelled {
+            self.textViewOrigin = self.textView.frame.origin
+        }
+    }
+    
+    @IBAction func addingTextDoneButtonTapped(_ sender: UIButton) {
+        self.textView.resignFirstResponder()
+    }
+    
+    func imageCropContainerTapped(_ gr: UITapGestureRecognizer) {
+        if gr.state == .ended {
+            if self.addingText {
+                self.textView.resignFirstResponder()
+            } else {
+                self.textView.becomeFirstResponder()
+            }
+        }
+    }
     
     @IBAction func brightnessSliderValueDidChange(_ sender: UISlider) {
         
@@ -376,6 +530,21 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         }
     }
     
+    // MARK: - Text view delegate
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        self.addingText = true
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        self.addingText = false
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        if textView == self.textView {
+            self.updateTextViewLayoutIfNeeded()
+        }
+    }
     
     //MARK: - PHPhotoLibraryChangeObserver
     func photoLibraryDidChange(_ changeInstance: PHChange) {
