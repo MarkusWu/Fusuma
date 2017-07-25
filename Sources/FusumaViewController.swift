@@ -53,6 +53,7 @@ public extension FusumaDelegate {
 public var fusumaBaseTintColor   = UIColor.hex("#FFFFFF", alpha: 1.0)
 public var fusumaTintColor       = UIColor.hex("#F38181", alpha: 1.0)
 public var fusumaBackgroundColor = UIColor.hex("#3B3D45", alpha: 1.0)
+public var fusumaTextColors: [UIColor] = []
 
 public var markusAccessPhotosType: MarkusAccessPhotosType = .image
 
@@ -140,6 +141,10 @@ public class FusumaViewController: UIViewController {
             self.albumView.hidePhotoEditor(!self.photoEditable)
             if self.previewButton != nil {
                 self.previewButton.isHidden = !self.photoEditable
+                
+                if self.photoEditable {
+                    self.previewButton.setImage(#imageLiteral(resourceName: "icon_preview"), for: .normal)
+                }
             }
         }
     }
@@ -174,6 +179,7 @@ public class FusumaViewController: UIViewController {
     lazy var albumView  = FSAlbumView.instance()
     lazy var cameraView = FSCameraView.instance()
     lazy var videoView = FSVideoCameraView.instance()
+    lazy var textColorSelectorView = ColorSelectorView.instance()
     
     public var preferredModeOnWillAppear: FusumaMode?
     
@@ -182,6 +188,12 @@ public class FusumaViewController: UIViewController {
     }
     
     public weak var delegate: FusumaDelegate? = nil
+    
+    deinit {
+        let nc = NotificationCenter.default
+        
+        nc.removeObserver(self)
+    }
     
     override public func loadView() {
         
@@ -194,6 +206,12 @@ public class FusumaViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         
+        let nc = NotificationCenter.default
+        
+        nc.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: .UIKeyboardWillShow, object: nil)
+        
+        nc.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: .UIKeyboardWillHide, object: nil)
+        
         self.previewButton.isHidden = !self.photoEditable
         
         self.view.backgroundColor = fusumaBackgroundColor
@@ -201,6 +219,7 @@ public class FusumaViewController: UIViewController {
         cameraView.delegate = self
         albumView.delegate  = self
         videoView.delegate = self
+        textColorSelectorView.delegate = self
         
         menuView.backgroundColor = fusumaBackgroundColor
         menuView.addBottomBorder(UIColor.black, width: 1.0)
@@ -363,9 +382,16 @@ public class FusumaViewController: UIViewController {
         cameraView.frame = CGRect(origin: CGPoint.zero, size: cameraShotContainer.frame.size)
         cameraView.layoutIfNeeded()
         
-        
         albumView.initialize()
         cameraView.initialize()
+        
+        let y = UIScreen.main.bounds.height - 35
+        let width = UIScreen.main.bounds.width
+        
+        let rect = CGRect(x: 0, y: y, width: width, height: 35)
+        self.textColorSelectorView.initialize(frame: rect, colors: fusumaTextColors, colorButtonWidth: 22)
+        
+        self.view.addSubview(textColorSelectorView)
         
         if hasVideo {
             
@@ -396,6 +422,50 @@ public class FusumaViewController: UIViewController {
         
         return true
     }
+    
+    // MARK: - Observers:
+    
+    func keyboardWillShow(_ notification: Notification) {
+        guard self.isViewLoaded && self.view.window != nil else {
+            return
+        }
+        
+        guard let keyboardRect = ((notification as NSNotification).userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+            return
+        }
+        
+        self.textColorSelectorView.alpha = 0.0
+        
+        let y = self.view.frame.height - (keyboardRect.height + 2 + self.textColorSelectorView.frame.height)
+        
+        UIView.animate(
+            withDuration: 0.30,
+            delay: 0.0,
+            options: .curveEaseIn,
+            animations: {
+                self.textColorSelectorView.alpha = 1.0
+                self.textColorSelectorView.frame.origin.y = y
+        },
+            completion: nil)
+    }
+    
+    func keyboardWillHide(_ notification: Notification) {
+        guard self.isViewLoaded && self.view.window != nil else {
+            return
+        }
+        
+        
+        UIView.animate(
+            withDuration: 0.30,
+            delay: 0.0,
+            options: .curveEaseIn,
+            animations: {
+                self.textColorSelectorView.alpha = 0.0
+        },
+            completion: nil)
+    }
+    
+    // MARK: - User interactions
     
     @IBAction func previewButtonTapped(_ sender: UIButton) {
         if self.albumView.brightnessSlider.isHidden {
@@ -717,6 +787,12 @@ private extension FusumaViewController {
         button.tintColor = fusumaTintColor
         
         button.addBottomBorder(fusumaTintColor, width: 3)
+    }
+}
+
+extension FusumaViewController: ColorSelectorViewDelegate {
+    func colorSelectorView(_ v: ColorSelectorView, didSelectColor color: UIColor) {
+        self.albumView.textView.textColor = color
     }
 }
 
