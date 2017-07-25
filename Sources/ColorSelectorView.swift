@@ -55,7 +55,7 @@ class ColorSelectorView: UIView {
         return UINib(nibName: "ColorSelectorView", bundle: Bundle(for: self.classForCoder())).instantiate(withOwner: self, options: nil)[0] as! ColorSelectorView
     }
     
-    func initialize(frame: CGRect, colors: [UIColor], colorButtonWidth: CGFloat = 20.0) {
+    func initialize(frame: CGRect, colors: [UIColor], selectedIndex: Int = 0,  colorButtonWidth: CGFloat = 20.0) {
         
         guard self.colorButtons.isEmpty else {
             return
@@ -91,6 +91,8 @@ class ColorSelectorView: UIView {
             self.addSubview(button)
             self.colorButtons.append(button)
         }
+        
+        self.selectColorAt(selectedIndex)
     }
     
     func colorButtonTapped(_ sender: RoundedButton) {
@@ -104,5 +106,13 @@ class ColorSelectorView: UIView {
             self.selectedColorButton = sender
             self.delegate?.colorSelectorView(self, didSelectColor: color)
         }
+    }
+    
+    func selectColorAt(_ index: Int) {
+        guard self.colorButtons.indices.contains(index) else {
+            return
+        }
+        
+        self.colorButtonTapped(self.colorButtons[index])
     }
 }

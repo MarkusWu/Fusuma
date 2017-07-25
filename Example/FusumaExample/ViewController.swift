@@ -23,6 +23,7 @@ class ViewController: UIViewController, FusumaDelegate {
         self.fileUrlLabel.text = ""
         
         fusumaImageOverlayBrightness = 0.88
+        fusumaTextColors = [UIColor.white, UIColor.black, UIColor.magenta, UIColor.blue, UIColor.purple, UIColor.brown]
     }
 
     override func didReceiveMemoryWarning() {
@@ -35,6 +36,7 @@ class ViewController: UIViewController, FusumaDelegate {
         
         let fusuma = FusumaViewController.shared
         fusuma.photoEditable = true
+        fusuma.initialSelectedColorIndex = 3
         
         //        fusumaCropImage = false
         

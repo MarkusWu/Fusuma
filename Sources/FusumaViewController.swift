@@ -181,6 +181,8 @@ public class FusumaViewController: UIViewController {
     lazy var videoView = FSVideoCameraView.instance()
     lazy var textColorSelectorView = ColorSelectorView.instance()
     
+    public var initialSelectedColorIndex: Int = 0
+    
     public var preferredModeOnWillAppear: FusumaMode?
     
     fileprivate var hasGalleryPermission: Bool {
@@ -297,6 +299,9 @@ public class FusumaViewController: UIViewController {
         cameraShotContainer.addSubview(cameraView)
         videoShotContainer.addSubview(videoView)
         
+        self.textColorSelectorView.alpha = 0
+        self.view.addSubview(self.textColorSelectorView)
+        
         titleLabel.textColor = fusumaBaseTintColor
         titleLabel.font = fusumaTitleFont
         
@@ -389,9 +394,7 @@ public class FusumaViewController: UIViewController {
         let width = UIScreen.main.bounds.width
         
         let rect = CGRect(x: 0, y: y, width: width, height: 35)
-        self.textColorSelectorView.initialize(frame: rect, colors: fusumaTextColors, colorButtonWidth: 22)
-        
-        self.view.addSubview(textColorSelectorView)
+        self.textColorSelectorView.initialize(frame: rect, colors: fusumaTextColors, selectedIndex: self.initialSelectedColorIndex, colorButtonWidth: 22)
         
         if hasVideo {
             
