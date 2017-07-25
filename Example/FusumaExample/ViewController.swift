@@ -21,6 +21,8 @@ class ViewController: UIViewController, FusumaDelegate {
         
         showButton.layer.cornerRadius = 2.0
         self.fileUrlLabel.text = ""
+        
+        fusumaImageOverlayBrightness = 0.88
     }
 
     override func didReceiveMemoryWarning() {
@@ -30,8 +32,6 @@ class ViewController: UIViewController, FusumaDelegate {
     
     @IBAction func showButtonPressed(_ sender: AnyObject) {
         // Show Fusuma
-        
-        fusumaImageOverlayBrightness = 0.88
         
         let fusuma = FusumaViewController.shared
         fusuma.photoEditable = true
@@ -57,6 +57,8 @@ class ViewController: UIViewController, FusumaDelegate {
         }
         
         imageView.image = image
+        
+        FusumaViewController.shared.clearEditText()
     }
 
     func fusumaImageSelected(_ image: UIImage, source: FusumaMode, metaData: ImageMetadata) {

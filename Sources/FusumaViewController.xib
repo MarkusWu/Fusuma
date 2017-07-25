@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -19,6 +19,7 @@
                 <outlet property="libraryButton" destination="cph-QM-jcJ" id="a4Y-xk-mq9"/>
                 <outlet property="menuView" destination="8ba-kc-jlJ" id="Gcf-Em-wAP"/>
                 <outlet property="photoLibraryViewerContainer" destination="1Pk-29-mUG" id="buU-Cs-7qz"/>
+                <outlet property="previewButton" destination="bqn-1T-KyI" id="0x6-Iv-dCt"/>
                 <outlet property="titleLabel" destination="cxN-Q8-Lgd" id="lSA-JT-Mpg"/>
                 <outlet property="videoButton" destination="8ew-Zi-63G" id="PFn-Tm-KwS"/>
                 <outlet property="videoShotContainer" destination="RIt-Tt-mDz" id="vOH-eo-bHH"/>
@@ -57,6 +58,19 @@
                             <state key="highlighted" image="ic_close"/>
                             <connections>
                                 <action selector="closeButtonPressed:" destination="-1" eventType="touchUpInside" id="rtM-1A-Fdg"/>
+                            </connections>
+                        </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bqn-1T-KyI">
+                            <rect key="frame" x="56" y="18" width="40" height="40"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="3TY-Bz-qd7"/>
+                                <constraint firstAttribute="width" constant="40" id="ubi-fQ-UtL"/>
+                            </constraints>
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
+                            <state key="normal" image="icon_preview"/>
+                            <connections>
+                                <action selector="previewButtonTapped:" destination="-1" eventType="touchUpInside" id="3tT-6f-Qv3"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5iB-Jh-kTh">
@@ -98,6 +112,7 @@
                     </subviews>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
+                        <constraint firstItem="bqn-1T-KyI" firstAttribute="leading" secondItem="Dx0-Tt-oZs" secondAttribute="trailing" constant="8" id="50B-mg-af0"/>
                         <constraint firstItem="Dx0-Tt-oZs" firstAttribute="leading" secondItem="8ba-kc-jlJ" secondAttribute="leading" constant="8" id="51K-wb-k3T"/>
                         <constraint firstItem="cxN-Q8-Lgd" firstAttribute="centerY" secondItem="Dx0-Tt-oZs" secondAttribute="centerY" id="5BY-tJ-KTH"/>
                         <constraint firstAttribute="height" constant="60" id="5ZE-04-Fz1"/>
@@ -106,6 +121,7 @@
                         <constraint firstAttribute="bottom" secondItem="Dx0-Tt-oZs" secondAttribute="bottom" constant="2" id="PcP-XF-uuQ"/>
                         <constraint firstItem="cxN-Q8-Lgd" firstAttribute="centerX" secondItem="8ba-kc-jlJ" secondAttribute="centerX" id="Pg3-Q7-ka9"/>
                         <constraint firstItem="gLa-66-axy" firstAttribute="leading" secondItem="cxN-Q8-Lgd" secondAttribute="trailing" id="Siy-zx-XkE"/>
+                        <constraint firstItem="bqn-1T-KyI" firstAttribute="centerY" secondItem="Dx0-Tt-oZs" secondAttribute="centerY" id="bCL-VO-qJT"/>
                         <constraint firstAttribute="bottom" secondItem="5iB-Jh-kTh" secondAttribute="bottom" constant="2" id="ncj-Eg-Y1d"/>
                     </constraints>
                 </view>
@@ -186,5 +202,6 @@
         <image name="ic_insert_photo" width="36" height="36"/>
         <image name="ic_photo_camera" width="36" height="36"/>
         <image name="ic_videocam" width="36" height="36"/>
+        <image name="icon_preview" width="30" height="30"/>
     </resources>
 </document>

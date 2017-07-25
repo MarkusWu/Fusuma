@@ -138,6 +138,9 @@ public class FusumaViewController: UIViewController {
     public var photoEditable: Bool = false {
         didSet {
             self.albumView.hidePhotoEditor(!self.photoEditable)
+            if self.previewButton != nil {
+                self.previewButton.isHidden = !self.photoEditable
+            }
         }
     }
     
@@ -162,6 +165,8 @@ public class FusumaViewController: UIViewController {
     @IBOutlet weak var videoButton: UIButton!
     @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var expandArrowButton: UIButton!
+    
+    @IBOutlet weak var previewButton: UIButton!
     
     @IBOutlet var libraryFirstConstraints: [NSLayoutConstraint]!
     @IBOutlet var cameraFirstConstraints: [NSLayoutConstraint]!
@@ -188,6 +193,8 @@ public class FusumaViewController: UIViewController {
     
     override public func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.previewButton.isHidden = !self.photoEditable
         
         self.view.backgroundColor = fusumaBackgroundColor
         
@@ -390,6 +397,16 @@ public class FusumaViewController: UIViewController {
         return true
     }
     
+    @IBAction func previewButtonTapped(_ sender: UIButton) {
+        if self.albumView.brightnessSlider.isHidden {
+            self.albumView.hideEditOptions(false)
+            self.previewButton.setImage(#imageLiteral(resourceName: "icon_preview"), for: .normal)
+        } else {
+            self.albumView.hideEditOptions(true)
+            self.previewButton.setImage(#imageLiteral(resourceName: "icon_no_preview"), for: .normal)
+        }
+    }
+    
     @IBAction func closeButtonPressed(_ sender: UIButton) {
         
         self.view.endEditing(true)
@@ -423,12 +440,35 @@ public class FusumaViewController: UIViewController {
         changeMode(FusumaMode.video)
     }
     
+    public func clearEditText() {
+        self.albumView.textView.text = ""
+        self.albumView.textViewOrigin = nil
+        self.albumView.updateTextViewLayoutIfNeeded()
+    }
+    
     @IBAction func doneButtonPressed(_ sender: UIButton) {
         let view = albumView.imageCropView
         
         self.view.endEditing(true)
         
-        if fusumaCropImage {
+        var image:UIImage? = nil
+        
+        if self.photoEditable {
+            image = self.albumView.convertEditImage()
+        }
+        
+        if image != nil || !fusumaCropImage {
+            
+            let selectedImage = image ?? (view?.image)!
+            
+            delegate?.fusumaImageSelected(selectedImage, source: mode)
+            
+            if fusumaAutoDismiss {
+                self.dismiss(animated: self.animatedOnDismiss, completion: {
+                    self.delegate?.fusumaDismissedWithImage((view?.image)!, source: self.mode)
+                })
+            }
+        } else {
             let normalizedX = (view?.contentOffset.x)! / (view?.contentSize.width)!
             let normalizedY = (view?.contentOffset.y)! / (view?.contentSize.height)!
             
@@ -481,17 +521,6 @@ public class FusumaViewController: UIViewController {
                                                         })
                 }
             })
-        } else {
-            print("no image crop ")
-            delegate?.fusumaImageSelected((view?.image)!, source: mode)
-            
-            if fusumaAutoDismiss {
-                self.dismiss(animated: self.animatedOnDismiss, completion: {
-                    self.delegate?.fusumaDismissedWithImage((view?.image)!, source: self.mode)
-                })
-            }
-            
-            
         }
     }
     
@@ -545,6 +574,12 @@ extension FusumaViewController: FSAlbumViewDelegate, FSCameraViewDelegate, FSVid
         self.closeButton.isEnabled = !flag
         self.doneButton.isEnabled = !flag
         self.expandArrowButton.isEnabled = !flag
+        self.previewButton.isEnabled = !flag
+        
+        if flag {
+            self.previewButton.setImage(#imageLiteral(resourceName: "icon_preview"), for: .normal)
+        }
+        
         // this is only for making the text color dim
         self.titleLabel.isEnabled = !flag
         self.titleLabel.isUserInteractionEnabled = !flag

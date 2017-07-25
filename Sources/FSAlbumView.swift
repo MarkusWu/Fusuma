@@ -30,10 +30,13 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     @IBOutlet weak var brightnessLessButton: UIButton!
     @IBOutlet weak var brightnessMoreButton: UIButton!
     
+    @IBOutlet weak var saveButton: UIButton!
+    @IBOutlet weak var clearTextButton: UIButton!
+    
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var textViewOverlay: UIView!
     
-    private var textViewOrigin: CGPoint?
+    var textViewOrigin: CGPoint?
     
     @IBOutlet weak var collectionViewConstraintHeight: NSLayoutConstraint!
     @IBOutlet weak var imageCropViewConstraintTop: NSLayoutConstraint!
@@ -59,8 +62,6 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
             
             if self.addingText {
                 
-                self.updateTextViewLayoutIfNeeded()
-                
                 self.textViewOverlay.isHidden = false
                 self.textView.isHidden = false
                 
@@ -68,7 +69,10 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
                 
                 UIView.animate(withDuration: 0.3, animations: {
                     self.textView.frame.origin = origin
-                }, completion: nil)
+                }, completion: {
+                    finished in
+                    self.updateTextViewLayoutIfNeeded()
+                })
             } else {
                 
                 self.textView.text = (self.textView.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
@@ -96,7 +100,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
                 }
             }
             
-            self.hideBrightnessOptions(self.addingText)
+            self.hideEditOptions(self.addingText)
             self.imageCropOverlay.isHidden = self.addingText
             self.delegate?.albumViewAddingText(self.addingText)
         }
@@ -195,6 +199,12 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
         self.textView.text = ""
         self.updateTextViewLayoutIfNeeded()
+        
+        self.brightnessSlider.tintColor = fusumaTintColor
+        self.brightnessSlider.value = fusumaImageOverlayBrightness
+        self.imageCropOverlay.backgroundColor = UIColor.black.withAlphaComponent(CGFloat(1 - fusumaImageOverlayBrightness))
+        
+        self.textView.delegate = self
     }
     
     deinit {
@@ -207,7 +217,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     
     func hidePhotoEditor(_ hide: Bool) {
         
-        self.hideBrightnessOptions(hide)
+        self.hideEditOptions(hide)
         self.imageCropOverlay.isHidden = hide
         
         // make sure the gesture is initiated
@@ -220,14 +230,6 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
                 self.doubleTappedOnImageCropContainer.isEnabled = false
             }
         }
-        
-        if !hide {
-            self.brightnessSlider.tintColor = fusumaTintColor
-            self.brightnessSlider.value = fusumaImageOverlayBrightness
-            self.imageCropOverlay.backgroundColor = UIColor.black.withAlphaComponent(CGFloat(1 - fusumaImageOverlayBrightness))
-            
-            self.textView.delegate = self
-        }
     }
     
     func updateTextViewLayoutIfNeeded() {
@@ -235,7 +237,6 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         self.textView.frame.size.width = min(self.textView.attributedText.size().width + 20, self.frame.width - 32)
         
         self.textView.frame.origin.x = (self.imageCropViewContainer.frame.width - self.textView.frame.width) / 2
-        
         
         var height = max(self.textView.contentSize.height + 20, 30)
         
@@ -409,13 +410,45 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     
     // MARK: - Utilities
     
-    func hideBrightnessOptions(_ flag: Bool) {
+    func saveImageToCameraRoll(image: UIImage) {
+        PHPhotoLibrary.shared().performChanges({
+            PHAssetChangeRequest.creationRequestForAsset(from: image)
+            
+        }, completionHandler: nil)
+    }
+    
+    func convertEditImage() -> UIImage? {
+        
+        let myView = self.imageCropViewContainer!
+        
+        UIGraphicsBeginImageContextWithOptions(myView.bounds.size, myView.isOpaque, 0.0)
+        myView.drawHierarchy(in: myView.bounds, afterScreenUpdates: false)
+        let snapshotImageFromMyView = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return snapshotImageFromMyView
+    }
+    
+    func hideEditOptions(_ flag: Bool) {
         self.brightnessSlider.isHidden = flag
         self.brightnessLessButton.isHidden = flag
         self.brightnessMoreButton.isHidden = flag
+        
+        self.saveButton.isHidden = flag
+        self.clearTextButton.isHidden = flag
     }
     
     // MARK: - User interactions
+    
+    @IBAction func saveButtonTapped(_ sender: UIButton) {
+        if let image = self.convertEditImage() {
+            self.saveImageToCameraRoll(image: image)
+        }
+    }
+    
+    @IBAction func clearTextButtonTapped(_ sender: UIButton) {
+        self.textView.text = ""
+        self.updateTextViewLayoutIfNeeded()
+    }
     
     func textViewPanned(_ gr: UIPanGestureRecognizer) {
         let translation = gr.translation(in: self.imageCropViewContainer)
