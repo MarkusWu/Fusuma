@@ -215,7 +215,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
         
         // make sure min, initial and max font size are valid
-        if fusumaMinFontSize > fusumaMinFontSize {
+        if fusumaMinFontSize > fusumaMaxFontSize {
             swap(&fusumaMinFontSize, &fusumaMaxFontSize)
         } else if fusumaMinFontSize == fusumaMaxFontSize {
             fusumaMaxFontSize = fusumaMinFontSize + 10
@@ -227,7 +227,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
         let interval = fusumaMaxFontSize - fusumaMinFontSize
         
-        let per = min(fusumaInitialFontSize - fusumaMinFontSize / interval, 1.0)
+        let per = min((fusumaInitialFontSize - fusumaMinFontSize) / interval, 1.0)
         self.fontSizeSlider.value = per
         
         self.fontSizeSlider.tintColor = fusumaTintColor
