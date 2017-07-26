@@ -127,6 +127,10 @@ public class FusumaViewController: UIViewController {
     /// a singleton shared instance
     private static var instance: FusumaViewController?
     
+    // used to ensure viewWillDisappear and viewDidDisappear is not being call when
+    // viewDidDisappear is never called.
+    private var didDisappear = true
+    
     public static var shared: FusumaViewController {
         if self.instance == nil {
            self.instance = FusumaViewController()
@@ -357,6 +361,10 @@ public class FusumaViewController: UIViewController {
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        guard self.didDisappear else {
+            return
+        }
+        
         if self.preferredModeOnWillAppear != nil {
             self.changeMode(self.preferredModeOnWillAppear!)
         }
@@ -387,7 +395,14 @@ public class FusumaViewController: UIViewController {
     
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        guard self.didDisappear else {
+            return
+        }
+        
         self.setUpAllViews()
+        
+        self.didDisappear = false
     }
     
     public func setUpAllViews() {
@@ -419,15 +434,16 @@ public class FusumaViewController: UIViewController {
     
     public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.stopAll()
-        if self.shouldRepositionImageCropContainerOnViewDisapper {
-            // reposition imageCropContainer for better UI purpose.
-            self.albumView.imageCropViewConstraintTop.constant = self.albumView.imageCropViewOriginalConstraintTop
-        }
+//        if self.shouldRepositionImageCropContainerOnViewDisapper {
+//            // reposition imageCropContainer for better UI purpose.
+//            self.albumView.imageCropViewConstraintTop.constant = self.albumView.imageCropViewOriginalConstraintTop
+//        }
     }
     
     public override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        self.stopAll()
+        self.didDisappear = true
     }
     
     override public var prefersStatusBarHidden : Bool {
@@ -733,6 +749,7 @@ private extension FusumaViewController {
         }
         doneButton.isHidden = !hasGalleryPermission
         self.view.bringSubview(toFront: menuView)
+        self.view.bringSubview(toFront: self.textColorSelectorView)
     }
     
     

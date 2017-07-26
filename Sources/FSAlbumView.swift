@@ -80,6 +80,9 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
                     finished in
                     self.updateTextViewLayoutIfNeeded()
                 })
+                
+                self.cropImageContainerNormalPosition()
+                
             } else {
                 
                 self.textView.text = (self.textView.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
@@ -279,17 +282,16 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     func selectImage(at indexNumber: Int) {
         if images.count > indexNumber {
             
-            changeImage(images[indexNumber])
-            collectionView.reloadData()
-            
             for indexPath in collectionView.indexPathsForSelectedItems ?? [] {
                 collectionView.deselectItem(at: indexPath, animated: false)
             }
             
-            collectionView.selectItem(at: IndexPath(row: indexNumber, section: 0), animated: false, scrollPosition: .top)
+            changeImage(images[indexNumber])
+            collectionView.reloadData()
             
-            imageCropView.changeScrollable(true)
-            dragDirection = .up
+            self.cropImageContainerNormalPosition()
+            
+            collectionView.selectItem(at: IndexPath(row: indexNumber, section: 0), animated: false, scrollPosition: .top)
         }
     }
     
@@ -438,6 +440,21 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     
     // MARK: - Utilities
     
+    func cropImageContainerNormalPosition() {
+        imageCropView.changeScrollable(true)
+        
+        imageCropViewConstraintTop.constant = imageCropViewOriginalConstraintTop
+        collectionViewConstraintHeight.constant = self.frame.height - imageCropViewOriginalConstraintTop - imageCropViewContainer.frame.height
+        
+        UIView.animate(withDuration: 0.2, delay: 0.0, options: UIViewAnimationOptions.curveEaseOut, animations: {
+            
+            self.layoutIfNeeded()
+            
+        }, completion: nil)
+        
+        dragDirection = Direction.up
+    }
+    
     func saveImageToCameraRoll(image: UIImage) {
         PHPhotoLibrary.shared().performChanges({
             PHAssetChangeRequest.creationRequestForAsset(from: image)
@@ -583,18 +600,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
         changeImage(images[(indexPath as NSIndexPath).row])
         
-        imageCropView.changeScrollable(true)
-        
-        imageCropViewConstraintTop.constant = imageCropViewOriginalConstraintTop
-        collectionViewConstraintHeight.constant = self.frame.height - imageCropViewOriginalConstraintTop - imageCropViewContainer.frame.height
-        
-        UIView.animate(withDuration: 0.2, delay: 0.0, options: UIViewAnimationOptions.curveEaseOut, animations: {
-            
-            self.layoutIfNeeded()
-            
-        }, completion: nil)
-        
-        dragDirection = Direction.up
+        self.cropImageContainerNormalPosition()
         collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
     }
     
