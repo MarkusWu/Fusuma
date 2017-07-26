@@ -42,6 +42,9 @@ fileprivate func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     func fusumaWillPresentPhotosLib(_ fusumaVC: FusumaViewController)
     func fusumaDidDismissPhotosLib(_ fusumaVC: FusumaViewController)
     
+    @objc optional func fusumaAddTextDidBegin()
+    @objc optional func fusumaAddTextDidEnd()
+    
     @objc optional func fusuma(_ fusumaVC: FusumaViewController, didTapClose button: UIButton)
 }
 
@@ -71,6 +74,10 @@ public var fusumaAutoDismiss = true
 public var fusumaStartingMode: FusumaMode = .library
 
 public var fusumaImageOverlayBrightness: Float = 0.45
+
+public var fusumaMinFontSize: Float = 18
+public var fusumaMaxFontSize: Float = 28
+public var fusumaInitialFontSize: Float = 20
 
 public var fusumaVideoStartImage : UIImage? = nil
 public var fusumaVideoStopImage : UIImage? = nil
@@ -488,8 +495,6 @@ public class FusumaViewController: UIViewController {
     
     @IBAction func closeButtonPressed(_ sender: UIButton) {
         
-        self.view.endEditing(true)
-        
         if self.delegate == nil {
             self.dismiss(animated: self.animatedOnDismiss, completion: nil)
         } else {
@@ -527,8 +532,6 @@ public class FusumaViewController: UIViewController {
     
     @IBAction func doneButtonPressed(_ sender: UIButton) {
         let view = albumView.imageCropView
-        
-        self.view.endEditing(true)
         
         var image:UIImage? = nil
         
@@ -659,6 +662,10 @@ extension FusumaViewController: FSAlbumViewDelegate, FSCameraViewDelegate, FSVid
             if let image = UIImage(named: "icon_preview", in: Bundle(for: type(of: self)), compatibleWith: nil){
                 self.previewButton.setImage(image, for: .normal)
             }
+            
+            self.delegate?.fusumaAddTextDidBegin?()
+        } else {
+            self.delegate?.fusumaAddTextDidEnd?()
         }
         
         // this is only for making the text color dim

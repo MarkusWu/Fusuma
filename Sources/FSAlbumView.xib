@@ -105,10 +105,10 @@
                     </constraints>
                 </view>
                 <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xim-a7-GDY">
-                    <rect key="frame" x="70" y="72" width="22" height="22"/>
+                    <rect key="frame" x="72" y="73" width="20" height="20"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="22" id="4md-Ms-Jnv"/>
-                        <constraint firstAttribute="height" constant="22" id="Lgh-vw-HT4"/>
+                        <constraint firstAttribute="width" constant="20" id="4md-Ms-Jnv"/>
+                        <constraint firstAttribute="height" constant="20" id="Lgh-vw-HT4"/>
                     </constraints>
                     <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <state key="normal" image="brightness_less"/>
@@ -179,21 +179,55 @@
                         <action selector="addTextButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="1D0-Cd-Dwd"/>
                     </connections>
                 </button>
+                <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dek-Mm-noj">
+                    <rect key="frame" x="134" y="399" width="20" height="20"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="20" id="hba-Ju-ClG"/>
+                        <constraint firstAttribute="height" constant="20" id="iwu-8T-3HA"/>
+                    </constraints>
+                    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <state key="normal" image="icon_font_size_less"/>
+                </button>
+                <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6aC-aH-Ivi">
+                    <rect key="frame" x="351" y="396.5" width="25" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="25" id="AYU-HI-sTc"/>
+                        <constraint firstAttribute="height" constant="25" id="mtn-jy-Ken"/>
+                    </constraints>
+                    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <state key="normal" image="icon_font_size_more"/>
+                </button>
+                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="cQg-6y-LI4">
+                    <rect key="frame" x="160" y="394" width="185" height="31"/>
+                    <constraints>
+                        <constraint firstAttribute="width" priority="750" constant="150" id="ENo-TE-VXf"/>
+                    </constraints>
+                    <connections>
+                        <action selector="fontSizeSliderValueDidChange:" destination="iN0-l3-epB" eventType="valueChanged" id="szR-ok-tkn"/>
+                    </connections>
+                </slider>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstItem="dek-Mm-noj" firstAttribute="centerY" secondItem="JAw-D4-Epa" secondAttribute="centerY" constant="-5" id="2vC-Dx-7vN"/>
                 <constraint firstItem="SdH-Ok-YOx" firstAttribute="leading" secondItem="xim-a7-GDY" secondAttribute="trailing" constant="8" id="55f-Xb-Rb4"/>
+                <constraint firstAttribute="trailing" secondItem="6aC-aH-Ivi" secondAttribute="trailing" constant="24" id="6vD-Ry-Ai3"/>
                 <constraint firstAttribute="trailing" secondItem="90B-0c-ych" secondAttribute="trailing" id="7re-q7-aoD"/>
                 <constraint firstAttribute="bottom" secondItem="9Cu-Zp-X0j" secondAttribute="bottom" id="94b-v2-S3a"/>
                 <constraint firstItem="SdH-Ok-YOx" firstAttribute="centerX" secondItem="90B-0c-ych" secondAttribute="centerX" id="9O5-AF-NNk"/>
+                <constraint firstItem="dek-Mm-noj" firstAttribute="leading" secondItem="JAw-D4-Epa" secondAttribute="trailing" constant="24" id="AAO-vc-mUI"/>
                 <constraint firstItem="i59-73-S3m" firstAttribute="bottom" secondItem="90B-0c-ych" secondAttribute="bottom" constant="-16" id="CbW-dp-o8R"/>
                 <constraint firstItem="SdH-Ok-YOx" firstAttribute="top" secondItem="90B-0c-ych" secondAttribute="top" constant="8" id="Hq4-qV-iU9"/>
                 <constraint firstItem="90B-0c-ych" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Nqq-tJ-MXy"/>
+                <constraint firstItem="cQg-6y-LI4" firstAttribute="leading" secondItem="dek-Mm-noj" secondAttribute="trailing" constant="8" id="T63-dw-kRu"/>
                 <constraint firstItem="2mB-gI-d9u" firstAttribute="centerY" secondItem="SdH-Ok-YOx" secondAttribute="centerY" id="UbK-pV-HNy"/>
                 <constraint firstAttribute="trailing" secondItem="9Cu-Zp-X0j" secondAttribute="trailing" id="Uhw-Pi-jJn"/>
+                <constraint firstItem="6aC-aH-Ivi" firstAttribute="centerY" secondItem="cQg-6y-LI4" secondAttribute="centerY" id="Vba-Em-cmR"/>
                 <constraint firstItem="i59-73-S3m" firstAttribute="leading" secondItem="90B-0c-ych" secondAttribute="leading" constant="16" id="YrH-bu-tWc"/>
+                <constraint firstItem="cQg-6y-LI4" firstAttribute="centerY" secondItem="dek-Mm-noj" secondAttribute="centerY" id="Yyv-Gb-NXf"/>
                 <constraint firstItem="xim-a7-GDY" firstAttribute="centerY" secondItem="SdH-Ok-YOx" secondAttribute="centerY" id="Z2G-oN-fUR"/>
                 <constraint firstItem="JAw-D4-Epa" firstAttribute="bottom" secondItem="i59-73-S3m" secondAttribute="bottom" id="bZW-5l-DH5"/>
+                <constraint firstItem="6aC-aH-Ivi" firstAttribute="leading" secondItem="cQg-6y-LI4" secondAttribute="trailing" constant="8" id="dLq-g5-DYG"/>
                 <constraint firstItem="1K0-sc-Ee3" firstAttribute="top" secondItem="90B-0c-ych" secondAttribute="top" constant="48" id="dqk-Mo-8Qa"/>
                 <constraint firstItem="9Cu-Zp-X0j" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="gu4-5B-2qu"/>
                 <constraint firstItem="2mB-gI-d9u" firstAttribute="leading" secondItem="SdH-Ok-YOx" secondAttribute="trailing" constant="8" id="pm4-g9-WZb"/>
@@ -212,6 +246,9 @@
                 <outlet property="clearTextButton" destination="JAw-D4-Epa" id="Pmd-JF-aRz"/>
                 <outlet property="collectionView" destination="6id-Ro-HHC" id="NDT-3i-ayr"/>
                 <outlet property="collectionViewConstraintHeight" destination="ofF-eS-Nvv" id="wTG-jf-uwE"/>
+                <outlet property="fontSizeLessButton" destination="dek-Mm-noj" id="suP-PK-gfh"/>
+                <outlet property="fontSizeMoreButton" destination="6aC-aH-Ivi" id="cc6-y3-riv"/>
+                <outlet property="fontSizeSlider" destination="cQg-6y-LI4" id="Hfq-qT-cpd"/>
                 <outlet property="imageCropOverlay" destination="Fpm-ZY-g5b" id="hu4-lT-NEq"/>
                 <outlet property="imageCropView" destination="Mc5-1c-z7q" id="oCj-GQ-fQS"/>
                 <outlet property="imageCropViewConstraintTop" destination="u5j-7G-j99" id="8dd-IK-PW2"/>
@@ -219,6 +256,7 @@
                 <outlet property="saveButton" destination="i59-73-S3m" id="eeE-h2-sHZ"/>
                 <outlet property="textView" destination="40R-H3-OK5" id="fxg-5P-26T"/>
                 <outlet property="textViewOverlay" destination="1jU-HJ-TyD" id="K4u-ZW-bDy"/>
+                <outletCollection property="iPadInactiveConstraints" destination="AAO-vc-mUI" collectionClass="NSMutableArray" id="Sur-G2-eib"/>
             </connections>
         </view>
     </objects>
@@ -226,6 +264,8 @@
         <image name="brightness_less" width="30" height="30"/>
         <image name="brightness_more" width="30" height="30"/>
         <image name="icon_add_text_filled" width="30" height="30"/>
+        <image name="icon_font_size_less" width="30" height="30"/>
+        <image name="icon_font_size_more" width="30" height="30"/>
         <image name="icon_image_file" width="30" height="30"/>
         <image name="icon_text_align_center" width="30" height="30"/>
     </resources>

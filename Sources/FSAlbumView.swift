@@ -30,12 +30,18 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     @IBOutlet weak var brightnessLessButton: UIButton!
     @IBOutlet weak var brightnessMoreButton: UIButton!
     
+    @IBOutlet weak var fontSizeSlider: UISlider!
+    @IBOutlet weak var fontSizeLessButton: UIButton!
+    @IBOutlet weak var fontSizeMoreButton: UIButton!
+    
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var clearTextButton: UIButton!
     @IBOutlet weak var addTextButton: UIButton!
     
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var textViewOverlay: UIView!
+    
+    @IBOutlet var iPadInactiveConstraints: [NSLayoutConstraint]!
     
     var textViewOrigin: CGPoint?
     
@@ -203,9 +209,27 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
         self.brightnessSlider.tintColor = fusumaTintColor
         self.brightnessSlider.value = fusumaImageOverlayBrightness
+        
+        let interval = abs(fusumaMaxFontSize - fusumaMinFontSize)
+        
+        if interval > 0 {
+            let per = min((fusumaInitialFontSize - fusumaMinFontSize) / interval, 1.0)
+            self.fontSizeSlider.value = per
+        }
+        
+        self.fontSizeSlider.tintColor = fusumaTintColor
+        self.textView.font = self.textView.font?.withSize(CGFloat(fusumaInitialFontSize))
+        
+        
         self.imageCropOverlay.backgroundColor = UIColor.black.withAlphaComponent(CGFloat(1 - fusumaImageOverlayBrightness))
         
         self.textView.delegate = self
+        
+        if UIDevice.current.userInterfaceIdiom == UIUserInterfaceIdiom.pad {
+            for c in self.iPadInactiveConstraints {
+                c.isActive = false
+            }
+        }
     }
     
     deinit {
@@ -234,11 +258,13 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         }
     }
     
-    func updateTextViewLayoutIfNeeded() {
+    func updateTextViewLayoutIfNeeded(_ updateXCoord: Bool = true) {
         
         self.textView.frame.size.width = min(self.textView.attributedText.size().width + 20, self.frame.width - 32)
         
-        self.textView.frame.origin.x = (self.imageCropViewContainer.frame.width - self.textView.frame.width) / 2
+        if updateXCoord {
+            self.textView.frame.origin.x = (self.imageCropViewContainer.frame.width - self.textView.frame.width) / 2
+        }
         
         var height = max(self.textView.contentSize.height + 20, 30)
         
@@ -435,6 +461,10 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         self.brightnessLessButton.isHidden = flag
         self.brightnessMoreButton.isHidden = flag
         
+        self.fontSizeSlider.isHidden = flag
+        self.fontSizeLessButton.isHidden = flag
+        self.fontSizeMoreButton.isHidden = flag
+        
         self.saveButton.isHidden = flag
         self.clearTextButton.isHidden = flag
         self.addTextButton.isHidden = flag
@@ -500,6 +530,13 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         let value = CGFloat(1 - sender.value)
         
         self.imageCropOverlay.backgroundColor = UIColor.black.withAlphaComponent(value)
+    }
+    
+    @IBAction func fontSizeSliderValueDidChange(_ sender: UISlider) {
+        let fontSize = fusumaMinFontSize + abs(fusumaMaxFontSize - fusumaMinFontSize) * sender.value
+        
+        self.textView.font = self.textView.font?.withSize(CGFloat(fontSize))
+        self.updateTextViewLayoutIfNeeded(false)
     }
     
     // MARK: - UICollectionViewDelegate Protocol
