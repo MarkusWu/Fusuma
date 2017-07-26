@@ -481,6 +481,10 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         self.textView.resignFirstResponder()
     }
     
+    @IBAction func addTextButtonTapped(_ sender: UIButton) {
+        self.textView.becomeFirstResponder()
+    }
+    
     func imageCropContainerTapped(_ gr: UITapGestureRecognizer) {
         if gr.state == .ended {
             if self.addingText {
