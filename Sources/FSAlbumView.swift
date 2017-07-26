@@ -61,8 +61,6 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     var addingText: Bool = false {
         didSet {
             
-            self.textView.textAlignment = .center
-            
             var origin = CGPoint.zero
             origin.x = (self.imageCropViewContainer.frame.width - self.textView.frame.width) / 2
             origin.y = self.imageCropViewContainer.frame.height * 0.20
@@ -87,7 +85,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
                 
                 self.textView.text = (self.textView.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
                 
-                self.updateTextViewLayoutIfNeeded()
+                self.updateTextViewLayoutIfNeeded(false)
                 
                 self.textViewOverlay.isHidden = true
                 
@@ -279,7 +277,13 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
             self.textView.frame.origin.x = (self.imageCropViewContainer.frame.width - self.textView.frame.width) / 2
         }
         
-        var height = max(self.textView.contentSize.height + 20, 30)
+        var verticalPadding: CGFloat = 0
+        
+        if self.addingText {
+            verticalPadding = 30
+        }
+        
+        var height = max(self.textView.contentSize.height + verticalPadding, 30)
         
         if self.addingText {
             height = min(160, height)
@@ -287,6 +291,11 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
         self.textView.frame.size.height = height
         
+        // centeralize text vertically, but work when textview in editmode only
+//        if height < 160 {
+//            let topCorrection = (self.textView.bounds.height - self.textView.contentSize.height * self.textView.zoomScale) / 2.0
+//            self.textView.contentOffset = CGPoint(x: 0, y: -topCorrection)
+//        }
     }
     
     func selectImage(at indexNumber: Int) {
