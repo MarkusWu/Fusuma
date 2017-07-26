@@ -139,6 +139,14 @@ public class FusumaViewController: UIViewController {
         return self.instance!
     }
     
+    public var imageOveralyBrightness: Float {
+        return self.albumView.brightnessSlider.value
+    }
+    
+    public var imageTextFontSize: CGFloat? {
+        return self.albumView.textView.font?.pointSize
+    }
+    
     public static func disposeShared() {
         self.instance = nil
     }
