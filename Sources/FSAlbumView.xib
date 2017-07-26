@@ -166,6 +166,16 @@
                         <action selector="clearTextButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="buR-9Y-J1D"/>
                     </connections>
                 </button>
+                <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1K0-sc-Ee3">
+                    <rect key="frame" x="15" y="108" width="35" height="35"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="35" id="bCV-2g-99N"/>
+                        <constraint firstAttribute="width" constant="35" id="mQp-ri-0b4"/>
+                    </constraints>
+                    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <inset key="contentEdgeInsets" minX="5" minY="5" maxX="5" maxY="5"/>
+                    <state key="normal" image="icon_add_text_filled"/>
+                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
@@ -181,15 +191,18 @@
                 <constraint firstItem="i59-73-S3m" firstAttribute="leading" secondItem="90B-0c-ych" secondAttribute="leading" constant="16" id="YrH-bu-tWc"/>
                 <constraint firstItem="xim-a7-GDY" firstAttribute="centerY" secondItem="SdH-Ok-YOx" secondAttribute="centerY" id="Z2G-oN-fUR"/>
                 <constraint firstItem="JAw-D4-Epa" firstAttribute="bottom" secondItem="i59-73-S3m" secondAttribute="bottom" id="bZW-5l-DH5"/>
+                <constraint firstItem="1K0-sc-Ee3" firstAttribute="top" secondItem="90B-0c-ych" secondAttribute="top" constant="48" id="dqk-Mo-8Qa"/>
                 <constraint firstItem="9Cu-Zp-X0j" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="gu4-5B-2qu"/>
                 <constraint firstItem="2mB-gI-d9u" firstAttribute="leading" secondItem="SdH-Ok-YOx" secondAttribute="trailing" constant="8" id="pm4-g9-WZb"/>
                 <constraint firstItem="90B-0c-ych" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="60" id="u5j-7G-j99"/>
+                <constraint firstItem="1K0-sc-Ee3" firstAttribute="leading" secondItem="90B-0c-ych" secondAttribute="leading" constant="15" id="uj3-qA-yyZ"/>
                 <constraint firstItem="JAw-D4-Epa" firstAttribute="leading" secondItem="i59-73-S3m" secondAttribute="trailing" constant="24" id="w2D-ps-Bnd"/>
                 <constraint firstItem="9Cu-Zp-X0j" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="zCK-Xd-fZp"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
+                <outlet property="addTextButton" destination="1K0-sc-Ee3" id="7bv-SA-vbn"/>
                 <outlet property="brightnessLessButton" destination="xim-a7-GDY" id="NgX-EC-zLP"/>
                 <outlet property="brightnessMoreButton" destination="2mB-gI-d9u" id="D71-J6-MnR"/>
                 <outlet property="brightnessSlider" destination="SdH-Ok-YOx" id="8Xd-H1-htR"/>
@@ -209,6 +222,7 @@
     <resources>
         <image name="brightness_less" width="30" height="30"/>
         <image name="brightness_more" width="30" height="30"/>
+        <image name="icon_add_text_filled" width="30" height="30"/>
         <image name="icon_image_file" width="30" height="30"/>
         <image name="icon_text_align_center" width="30" height="30"/>
     </resources>

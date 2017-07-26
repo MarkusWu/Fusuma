@@ -32,6 +32,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var clearTextButton: UIButton!
+    @IBOutlet weak var addTextButton: UIButton!
     
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var textViewOverlay: UIView!
@@ -436,6 +437,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
         self.saveButton.isHidden = flag
         self.clearTextButton.isHidden = flag
+        self.addTextButton.isHidden = flag
     }
     
     // MARK: - User interactions
