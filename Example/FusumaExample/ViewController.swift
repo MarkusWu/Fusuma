@@ -23,7 +23,9 @@ class ViewController: UIViewController, FusumaDelegate {
         self.fileUrlLabel.text = ""
         
         fusumaImageOverlayBrightness = 0.88
-        fusumaTextColors = [UIColor.white, UIColor.black, UIColor.magenta, UIColor.blue, UIColor.purple, UIColor.brown]
+//        fusumaTextColors = [UIColor.white, UIColor.black, UIColor.magenta, UIColor.blue, UIColor.purple, UIColor.brown]
+        
+        fusumaTextColors = Array(repeating: UIColor.magenta, count: 20)
     }
 
     override func didReceiveMemoryWarning() {

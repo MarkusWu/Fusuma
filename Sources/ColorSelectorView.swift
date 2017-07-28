@@ -20,6 +20,10 @@ class ColorSelectorView: UIView {
     
     private(set) var colorButtonWidth: CGFloat = 20.0
     
+    @IBOutlet private weak var scrollView: UIScrollView!
+    
+    var hasFadingEdge = true
+    
     var selectedColorButton: RoundedButton! {
         willSet {
             if self.selectedColorButton != nil {
@@ -69,7 +73,23 @@ class ColorSelectorView: UIView {
         
         self.colorButtonWidth = colorButtonWidth
         
-        let interval = max(frame.width / CGFloat(colors.count), colorButtonWidth)
+        var interval = frame.width / CGFloat(colors.count)
+        
+        let minInterval = colorButtonWidth + 6
+        
+        if interval < minInterval {
+            let maxItems = Int(frame.width / CGFloat(minInterval))
+            
+            let numberOfItems = CGFloat(maxItems) - 0.5
+            
+            interval = frame.width / numberOfItems
+            
+            self.scrollView.alwaysBounceHorizontal = true
+            self.hasFadingEdge = true
+        } else {
+            self.scrollView.alwaysBounceHorizontal = false
+            self.hasFadingEdge = false
+        }
         
         for i in 0..<colors.count {
             
@@ -88,9 +108,13 @@ class ColorSelectorView: UIView {
             
             button.addTarget(self, action: #selector(self.colorButtonTapped(_:)), for: .touchUpInside)
             
-            self.addSubview(button)
+            self.scrollView.addSubview(button)
             self.colorButtons.append(button)
         }
+        
+        let width = interval * CGFloat(colors.count)
+        
+        self.scrollView.contentSize = CGSize(width: width, height: self.frame.height)
         
         self.selectColorAt(selectedIndex)
     }
@@ -115,4 +139,41 @@ class ColorSelectorView: UIView {
         
         self.colorButtonTapped(self.colorButtons[index])
     }
+    
+    let fadeLength: CGFloat = 8.0
+    
+    override func layoutSubviews() {
+        
+        super.layoutSubviews()
+        
+        if self.hasFadingEdge {
+            let transparent = UIColor.clear.cgColor
+            let opaque = UIColor.white.cgColor
+            
+            let maskLayer = CALayer()
+            maskLayer.frame = self.bounds
+            
+            let gradientLayer = CAGradientLayer()
+            gradientLayer.frame = CGRect(x: self.bounds.origin.x, y: 0, width: self.bounds.size.width, height: self.bounds.size.height)
+            gradientLayer.colors = [transparent, opaque, opaque, transparent]
+            
+            gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
+            gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
+            
+            // fading top and bottom, if startPoint and endPoint specified. Otherwise, left and right.
+            
+            let fadePercentage = Double(self.fadeLength / self.frame.width)
+            
+            gradientLayer.locations = [
+                0,
+                NSNumber(floatLiteral: fadePercentage),
+                NSNumber(floatLiteral: 1 - fadePercentage),
+                1
+            ]
+            
+            
+            maskLayer.addSublayer(gradientLayer)
+            self.layer.mask = maskLayer
+        }
+        }
 }
