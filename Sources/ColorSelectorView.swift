@@ -146,34 +146,37 @@ class ColorSelectorView: UIView {
         
         super.layoutSubviews()
         
+        
+        let maskLayer = CALayer()
+        maskLayer.frame = self.bounds
+        
+        let transparent = UIColor.clear.cgColor
+        let opaque = UIColor.white.cgColor
+        
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = CGRect(x: self.bounds.origin.x, y: 0, width: self.bounds.size.width, height: self.bounds.size.height)
+        gradientLayer.colors = [transparent, opaque, opaque, transparent]
+        
+        gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
+        
+        // fading top and bottom, if startPoint and endPoint specified. Otherwise, left and right.
+        
+        var fadePercentage = 0.0//Double(self.fadeLength / self.frame.width)
+        
         if self.hasFadingEdge {
-            let transparent = UIColor.clear.cgColor
-            let opaque = UIColor.white.cgColor
-            
-            let maskLayer = CALayer()
-            maskLayer.frame = self.bounds
-            
-            let gradientLayer = CAGradientLayer()
-            gradientLayer.frame = CGRect(x: self.bounds.origin.x, y: 0, width: self.bounds.size.width, height: self.bounds.size.height)
-            gradientLayer.colors = [transparent, opaque, opaque, transparent]
-            
-            gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
-            gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
-            
-            // fading top and bottom, if startPoint and endPoint specified. Otherwise, left and right.
-            
-            let fadePercentage = Double(self.fadeLength / self.frame.width)
-            
-            gradientLayer.locations = [
-                0,
-                NSNumber(floatLiteral: fadePercentage),
-                NSNumber(floatLiteral: 1 - fadePercentage),
-                1
-            ]
-            
-            
-            maskLayer.addSublayer(gradientLayer)
-            self.layer.mask = maskLayer
+            fadePercentage = Double(self.fadeLength / self.frame.width)
         }
-        }
+        
+        gradientLayer.locations = [
+            0,
+            NSNumber(floatLiteral: fadePercentage),
+            NSNumber(floatLiteral: 1 - fadePercentage),
+            1
+        ]
+        
+        
+        maskLayer.addSublayer(gradientLayer)
+        self.layer.mask = maskLayer
+    }
 }
