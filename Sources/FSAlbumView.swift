@@ -41,6 +41,15 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var textViewOverlay: UIView!
     
+    @IBOutlet weak var textAlphaContainer: UIView!
+    @IBOutlet weak var textAlphaSlider: UISlider!
+    
+    lazy var textColorSelectorView = ColorSelectorView.instance()
+    
+    var textAlpha: CGFloat {
+        return CGFloat(self.textAlphaSlider.value * 0.5) + 0.5
+    }
+    
     @IBOutlet var iPadInactiveConstraints: [NSLayoutConstraint]!
     
     var textViewOrigin: CGPoint?
@@ -241,6 +250,18 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
                 c.isActive = false
             }
         }
+        
+        let y = UIScreen.main.bounds.height - 35
+        let width = UIScreen.main.bounds.width
+        
+        self.textColorSelectorView.alpha = 0.0
+        
+        self.textColorSelectorView.delegate = self
+        
+        self.addSubview(textColorSelectorView)
+        
+        let rect = CGRect(x: 0, y: y, width: width, height: 35)
+        self.textColorSelectorView.initialize(frame: rect, colors: fusumaTextColors, selectedIndex: 0, colorButtonWidth: 25)
     }
     
     deinit {
@@ -561,6 +582,13 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         }
     }
     
+    @IBAction func textAlphaSliderValueDidChange(_ sender: UISlider) {
+        if let color = self.textView.textColor {
+            self.textView.textColor = color.withAlphaComponent(self.textAlpha)
+            self.textColorSelectorView.colorAlpha = self.textAlpha
+        }
+    }
+    
     @IBAction func brightnessSliderValueDidChange(_ sender: UISlider) {
         
         let value = CGFloat(1 - sender.value)
@@ -851,5 +879,57 @@ extension FSAlbumView {
             assets.append(asset)
         }
         return assets
+    }
+}
+
+
+extension FSAlbumView: ColorSelectorViewDelegate {
+    
+    func hide(_ hide: Bool, view: UIView) {
+        if hide {
+            if view.alpha == 0.0 {
+                return
+            }
+            
+            UIView.animate(withDuration: 0.3, animations: {
+                view.alpha = 0.0
+            })
+            
+        } else {
+            if view.alpha == 1.0 {
+                return
+            }
+            
+            UIView.animate(withDuration: 0.3, animations: {
+                view.alpha = 1.0
+            })
+        }
+    }
+    
+    func colorSelectorView(_ v: ColorSelectorView, didSelectColor color: UIColor) {
+        self.textView.textColor = color.withAlphaComponent(self.textAlpha)
+        
+        self.hide(true, view: textAlphaContainer)
+    }
+    
+    func colorSelectorView(_ v: ColorSelectorView, diSelectAtIndex index: Int) {
+        // no-ops
+    }
+    
+    func colorSelectorView(_ v: ColorSelectorView, didLongPressSelectedColor gr: UILongPressGestureRecognizer) {
+        if gr.state == .began {
+            
+            var centerX = self.frame.midX
+                        
+            if let button = v.selectedColorButton {
+                let p = v.scrollView.convert(button.center, to: self)
+                centerX = p.x
+                centerX = min(max(centerX, textAlphaContainer.bounds.midX + 5), self.frame.width - textAlphaContainer.bounds.midX - 5)
+            }
+            
+            textAlphaContainer.center.x = centerX
+            
+            self.hide(false, view: textAlphaContainer)
+        }
     }
 }

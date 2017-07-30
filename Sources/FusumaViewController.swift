@@ -200,7 +200,12 @@ public class FusumaViewController: UIViewController {
     lazy var albumView  = FSAlbumView.instance()
     lazy var cameraView = FSCameraView.instance()
     lazy var videoView = FSVideoCameraView.instance()
-    lazy var textColorSelectorView = ColorSelectorView.instance()
+    var textColorSelectorView: ColorSelectorView! {
+        return self.albumView.textColorSelectorView
+    }
+    var textAlphaContainer: UIView! {
+        return self.albumView.textAlphaContainer
+    }
     
     public var initialSelectedColorIndex: Int = 0
     
@@ -242,7 +247,6 @@ public class FusumaViewController: UIViewController {
         cameraView.delegate = self
         albumView.delegate  = self
         videoView.delegate = self
-        textColorSelectorView.delegate = self
         
         menuView.backgroundColor = fusumaBackgroundColor
         menuView.addBottomBorder(UIColor.black, width: 1.0)
@@ -319,9 +323,6 @@ public class FusumaViewController: UIViewController {
         photoLibraryViewerContainer.addSubview(albumView)
         cameraShotContainer.addSubview(cameraView)
         videoShotContainer.addSubview(videoView)
-        
-        self.textColorSelectorView.alpha = 0
-        self.view.addSubview(self.textColorSelectorView)
         
         titleLabel.textColor = fusumaBaseTintColor
         titleLabel.font = fusumaTitleFont
@@ -422,12 +423,6 @@ public class FusumaViewController: UIViewController {
         albumView.initialize()
         cameraView.initialize()
         
-        let y = UIScreen.main.bounds.height - 35
-        let width = UIScreen.main.bounds.width
-        
-        let rect = CGRect(x: 0, y: y, width: width, height: 35)
-        self.textColorSelectorView.initialize(frame: rect, colors: fusumaTextColors, selectedIndex: self.initialSelectedColorIndex, colorButtonWidth: 22)
-        
         if hasVideo {
             
             videoView.frame = CGRect(origin: CGPoint.zero, size: videoShotContainer.frame.size)
@@ -474,6 +469,9 @@ public class FusumaViewController: UIViewController {
         
         let y = self.view.frame.height - (keyboardRect.height + 2 + self.textColorSelectorView.frame.height)
         
+        var rect = self.textAlphaContainer.frame
+        rect.origin.y = y - rect.height - 10
+        
         UIView.animate(
             withDuration: 0.30,
             delay: 0.0,
@@ -481,6 +479,7 @@ public class FusumaViewController: UIViewController {
             animations: {
                 self.textColorSelectorView.alpha = 1.0
                 self.textColorSelectorView.frame.origin.y = y
+                self.textAlphaContainer.frame = rect
         },
             completion: nil)
     }
@@ -497,6 +496,7 @@ public class FusumaViewController: UIViewController {
             options: .curveEaseIn,
             animations: {
                 self.textColorSelectorView.alpha = 0.0
+                self.textAlphaContainer.alpha = 0.0
         },
             completion: nil)
     }
@@ -757,7 +757,6 @@ private extension FusumaViewController {
         }
         doneButton.isHidden = !hasGalleryPermission
         self.view.bringSubview(toFront: menuView)
-        self.view.bringSubview(toFront: self.textColorSelectorView)
     }
     
     
@@ -830,12 +829,6 @@ private extension FusumaViewController {
         button.tintColor = fusumaTintColor
         
         button.addBottomBorder(fusumaTintColor, width: 3)
-    }
-}
-
-extension FusumaViewController: ColorSelectorViewDelegate {
-    func colorSelectorView(_ v: ColorSelectorView, didSelectColor color: UIColor) {
-        self.albumView.textView.textColor = color
     }
 }
 

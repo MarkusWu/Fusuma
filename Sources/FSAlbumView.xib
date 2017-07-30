@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -206,6 +206,35 @@
                         <action selector="fontSizeSliderValueDidChange:" destination="iN0-l3-epB" eventType="valueChanged" id="szR-ok-tkn"/>
                     </connections>
                 </slider>
+                <view alpha="0.0" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6m2-Yg-ym0" userLabel="Text Alpha Slider Container">
+                    <rect key="frame" x="102" y="277" width="196" height="46"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ojo-lC-Ge8" userLabel="background" customClass="MaterialView" customModule="Fusuma" customModuleProvider="target">
+                            <rect key="frame" x="0.0" y="0.0" width="196" height="46"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="boolean" keyPath="materialDesign" value="YES"/>
+                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                    <real key="value" value="8"/>
+                                </userDefinedRuntimeAttribute>
+                                <userDefinedRuntimeAttribute type="number" keyPath="materialCornerRadius">
+                                    <real key="value" value="8"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="HFc-Zm-irn">
+                            <rect key="frame" x="8" y="8" width="180" height="31"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="tintColor" red="0.0" green="0.50196081400000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="textAlphaSliderValueDidChange:" destination="iN0-l3-epB" eventType="touchUpInside" id="ufE-Lk-5Vq"/>
+                            </connections>
+                        </slider>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
@@ -254,6 +283,8 @@
                 <outlet property="imageCropViewConstraintTop" destination="u5j-7G-j99" id="8dd-IK-PW2"/>
                 <outlet property="imageCropViewContainer" destination="90B-0c-ych" id="UNv-Xg-Rcp"/>
                 <outlet property="saveButton" destination="i59-73-S3m" id="eeE-h2-sHZ"/>
+                <outlet property="textAlphaContainer" destination="6m2-Yg-ym0" id="RfS-jm-TF9"/>
+                <outlet property="textAlphaSlider" destination="HFc-Zm-irn" id="JA6-sO-457"/>
                 <outlet property="textView" destination="40R-H3-OK5" id="fxg-5P-26T"/>
                 <outlet property="textViewOverlay" destination="1jU-HJ-TyD" id="K4u-ZW-bDy"/>
                 <outletCollection property="iPadInactiveConstraints" destination="AAO-vc-mUI" collectionClass="NSMutableArray" id="Sur-G2-eib"/>

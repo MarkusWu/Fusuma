@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0DEA5F6A1F27E59A00E47AED /* ColorSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0DEA5F691F27E59A00E47AED /* ColorSelectorView.xib */; };
-		0DEA5F6C1F27E5E100E47AED /* ColorSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEA5F6B1F27E5E100E47AED /* ColorSelectorView.swift */; };
+		0D0B2C471F2E3FEB00FAF0F9 /* ColorSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0B2C451F2E3FEB00FAF0F9 /* ColorSelectorView.swift */; };
+		0D0B2C481F2E3FEB00FAF0F9 /* ColorSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D0B2C461F2E3FEB00FAF0F9 /* ColorSelectorView.xib */; };
+		0D0B2C4A1F2E48E800FAF0F9 /* MaterialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0B2C491F2E48E800FAF0F9 /* MaterialView.swift */; };
 		0DEA5F6E1F27E78600E47AED /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DEA5F6D1F27E78600E47AED /* RoundedButton.swift */; };
 		52412A971CA6114A0073C4BE /* Fusuma.h in Headers */ = {isa = PBXBuildFile; fileRef = 52412A961CA6114A0073C4BE /* Fusuma.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EDDC0B3E1D04F53E009135DB /* FSVideoCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDC0B3C1D04F53E009135DB /* FSVideoCameraView.swift */; };
@@ -27,8 +28,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0DEA5F691F27E59A00E47AED /* ColorSelectorView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ColorSelectorView.xib; sourceTree = "<group>"; };
-		0DEA5F6B1F27E5E100E47AED /* ColorSelectorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorSelectorView.swift; sourceTree = "<group>"; };
+		0D0B2C451F2E3FEB00FAF0F9 /* ColorSelectorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorSelectorView.swift; sourceTree = "<group>"; };
+		0D0B2C461F2E3FEB00FAF0F9 /* ColorSelectorView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ColorSelectorView.xib; sourceTree = "<group>"; };
+		0D0B2C491F2E48E800FAF0F9 /* MaterialView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaterialView.swift; sourceTree = "<group>"; };
 		0DEA5F6D1F27E78600E47AED /* RoundedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
 		52412A931CA6114A0073C4BE /* Fusuma.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Fusuma.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		52412A961CA6114A0073C4BE /* Fusuma.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Fusuma.h; sourceTree = "<group>"; };
@@ -104,8 +106,9 @@
 				EDDC0B531D0511F2009135DB /* FSImageCropView.swift */,
 				EDDC0B3C1D04F53E009135DB /* FSVideoCameraView.swift */,
 				EDDC0B3D1D04F53E009135DB /* FSVideoCameraView.xib */,
-				0DEA5F6B1F27E5E100E47AED /* ColorSelectorView.swift */,
-				0DEA5F691F27E59A00E47AED /* ColorSelectorView.xib */,
+				0D0B2C451F2E3FEB00FAF0F9 /* ColorSelectorView.swift */,
+				0D0B2C461F2E3FEB00FAF0F9 /* ColorSelectorView.xib */,
+				0D0B2C491F2E48E800FAF0F9 /* MaterialView.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -181,7 +184,7 @@
 			files = (
 				EDDC0B3F1D04F53E009135DB /* FSVideoCameraView.xib in Resources */,
 				EDDC0B571D0511F2009135DB /* FSAlbumViewCell.xib in Resources */,
-				0DEA5F6A1F27E59A00E47AED /* ColorSelectorView.xib in Resources */,
+				0D0B2C481F2E3FEB00FAF0F9 /* ColorSelectorView.xib in Resources */,
 				EDDC0B591D0511F2009135DB /* FSCameraView.xib in Resources */,
 				EDDC0B551D0511F2009135DB /* FSAlbumView.xib in Resources */,
 				EDDC0B5D1D051245009135DB /* Assets.xcassets in Resources */,
@@ -196,13 +199,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0D0B2C471F2E3FEB00FAF0F9 /* ColorSelectorView.swift in Sources */,
 				EDDC0B3E1D04F53E009135DB /* FSVideoCameraView.swift in Sources */,
 				EDDC0B581D0511F2009135DB /* FSCameraView.swift in Sources */,
 				EDDC0B4A1D0511E7009135DB /* FusumaViewController.swift in Sources */,
 				EDDC0B541D0511F2009135DB /* FSAlbumView.swift in Sources */,
 				0DEA5F6E1F27E78600E47AED /* RoundedButton.swift in Sources */,
 				EDDC0B5A1D0511F2009135DB /* FSConstants.swift in Sources */,
-				0DEA5F6C1F27E5E100E47AED /* ColorSelectorView.swift in Sources */,
+				0D0B2C4A1F2E48E800FAF0F9 /* MaterialView.swift in Sources */,
 				EDDC0B5B1D0511F2009135DB /* FSImageCropView.swift in Sources */,
 				EDDC0B561D0511F2009135DB /* FSAlbumViewCell.swift in Sources */,
 			);

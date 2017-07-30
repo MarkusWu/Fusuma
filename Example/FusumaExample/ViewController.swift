@@ -25,7 +25,7 @@ class ViewController: UIViewController, FusumaDelegate {
         fusumaImageOverlayBrightness = 0.88
 //        fusumaTextColors = [UIColor.white, UIColor.black, UIColor.magenta, UIColor.blue, UIColor.purple, UIColor.brown]
         
-        fusumaTextColors = Array(repeating: UIColor.magenta, count: 20)
+        fusumaTextColors = Array(repeating: UIColor.magenta, count: 10)
     }
 
     override func didReceiveMemoryWarning() {

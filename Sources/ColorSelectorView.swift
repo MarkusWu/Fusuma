@@ -10,9 +10,11 @@ import UIKit
 
 protocol ColorSelectorViewDelegate: class {
     func colorSelectorView(_ v: ColorSelectorView, didSelectColor color: UIColor)
+    func colorSelectorView(_ v: ColorSelectorView, diSelectAtIndex index: Int)
+    func colorSelectorView(_ v: ColorSelectorView, didLongPressSelectedColor gr: UILongPressGestureRecognizer)
 }
 
-class ColorSelectorView: UIView {
+class ColorSelectorView: UIView, UIScrollViewDelegate {
     
     weak var delegate: ColorSelectorViewDelegate?
     
@@ -20,15 +22,28 @@ class ColorSelectorView: UIView {
     
     private(set) var colorButtonWidth: CGFloat = 20.0
     
-    @IBOutlet private weak var scrollView: UIScrollView!
+    var fadeLength: CGFloat = 8.0
     
-    var hasFadingEdge = true
+    @IBOutlet private(set) weak var scrollView: UIScrollView!
+    
+    var colorAlpha: CGFloat = 1.0 {
+        didSet {
+            for b in self.colorButtons {
+                if let color = b.backgroundColor {
+                    b.backgroundColor = color.withAlphaComponent(self.colorAlpha)
+                }
+            }
+        }
+    }
     
     var selectedColorButton: RoundedButton! {
         willSet {
             if self.selectedColorButton != nil {
                 
                 let center = self.selectedColorButton.center
+                
+                self.selectedColorButton.borderColor = UIColor.white
+                self.selectedColorButton.borderWidth = 1.5
                 
                 UIView.animate(withDuration: 0.3, animations: {
                     self.selectedColorButton.cornerRadius = self.colorButtonWidth / 2.0
@@ -44,6 +59,9 @@ class ColorSelectorView: UIView {
                 
                 let center = self.selectedColorButton.center
                 
+                self.selectedColorButton.borderColor = UIColor.white
+                self.selectedColorButton.borderWidth = 3.0
+                
                 UIView.animate(withDuration: 0.3, animations: {
                     self.selectedColorButton.frame.size = CGSize(width: width, height: width)
                     
@@ -53,6 +71,52 @@ class ColorSelectorView: UIView {
                 }, completion: nil)
             }
         }
+    }
+    
+    override func layoutSubviews() {
+        
+        super.layoutSubviews()
+        
+        let maskLayer = CALayer()
+        maskLayer.frame = self.bounds
+        
+        let transparent = UIColor.clear.cgColor
+        let opaque = UIColor.black.cgColor
+        
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = CGRect(x: self.bounds.origin.x, y: 0, width: self.bounds.size.width, height: self.bounds.size.height)
+        gradientLayer.colors = [transparent, opaque, opaque, transparent]
+        
+        //If startPoint and endPoint specified, fade left right. Otherwise, top bottom.
+        gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
+        
+        var locations: [NSNumber] = []
+        
+        let fadePercentage = Double(fadeLength / self.frame.width)
+        
+        let xOffset = self.scrollView.contentOffset.x
+        
+        locations.append(0)
+        
+        if xOffset > 0 {
+            locations.append(NSNumber(floatLiteral: fadePercentage))
+        } else {
+            locations.append(0)
+        }
+        
+        if xOffset + self.frame.width < self.scrollView.contentSize.width {
+            locations.append(NSNumber(floatLiteral: 1 - fadePercentage))
+        } else {
+            locations.append(1)
+        }
+        
+        locations.append(1)
+        
+        gradientLayer.locations = locations
+        
+        maskLayer.addSublayer(gradientLayer)
+        self.layer.mask = maskLayer
     }
 
     static func instance() -> ColorSelectorView {
@@ -71,11 +135,13 @@ class ColorSelectorView: UIView {
         
         self.frame = frame
         
+        self.scrollView.delegate = self
+        
         self.colorButtonWidth = colorButtonWidth
         
         var interval = frame.width / CGFloat(colors.count)
         
-        let minInterval = colorButtonWidth + 6
+        let minInterval = colorButtonWidth + 10
         
         if interval < minInterval {
             let maxItems = Int(frame.width / CGFloat(minInterval))
@@ -85,10 +151,8 @@ class ColorSelectorView: UIView {
             interval = frame.width / numberOfItems
             
             self.scrollView.alwaysBounceHorizontal = true
-            self.hasFadingEdge = true
         } else {
             self.scrollView.alwaysBounceHorizontal = false
-            self.hasFadingEdge = false
         }
         
         for i in 0..<colors.count {
@@ -103,8 +167,12 @@ class ColorSelectorView: UIView {
             button.backgroundColor = color
             button.cornerRadius = colorButtonWidth / 2.0
             button.borderColor = UIColor.white
-            button.borderWidth = 1.8
+            button.borderWidth = 1.5
             button.center = center
+            button.tag = i
+            
+            let longPress = UILongPressGestureRecognizer(target: self, action: #selector(self.selectedColorButtonLongPressed(_:)))
+            button.addGestureRecognizer(longPress)
             
             button.addTarget(self, action: #selector(self.colorButtonTapped(_:)), for: .touchUpInside)
             
@@ -119,16 +187,45 @@ class ColorSelectorView: UIView {
         self.selectColorAt(selectedIndex)
     }
     
-    func colorButtonTapped(_ sender: RoundedButton) {
-        
-        if self.selectedColorButton === sender {
+    // MARK: - Utilities
+    
+    func makeSelectedColorVisible() {
+        if let b = self.selectedColorButton {
+            let xOffset = self.scrollView.contentOffset.x
+            let diff = b.frame.maxX - self.frame.width
+            
+            if diff > xOffset {
+                self.scrollView.setContentOffset(CGPoint(x: diff, y: 0), animated: false)
+            }
+        }
+    }
+    
+    // MARK: - User interactions
+    
+    func selectedColorButtonLongPressed(_ gr: UILongPressGestureRecognizer) {
+        guard let button = gr.view as? RoundedButton else {
             return
         }
         
-        debugPrint("color button is tapped: \(sender.backgroundColor!)")
-        if let color = sender.backgroundColor {
+        if button === self.selectedColorButton {
+        } else {
+            if gr.state == .began {
+                self.colorButtonTapped(button)
+            }
+        }
+        
+        self.delegate?.colorSelectorView(self, didLongPressSelectedColor: gr)
+    }
+    
+    func colorButtonTapped(_ sender: RoundedButton) {
+        
+        if self.selectedColorButton !== sender {
             self.selectedColorButton = sender
+        }
+        
+        if let color = sender.backgroundColor {
             self.delegate?.colorSelectorView(self, didSelectColor: color)
+            self.delegate?.colorSelectorView(self, diSelectAtIndex: sender.tag)
         }
     }
     
@@ -140,43 +237,11 @@ class ColorSelectorView: UIView {
         self.colorButtonTapped(self.colorButtons[index])
     }
     
-    let fadeLength: CGFloat = 8.0
+    // MARK: - Scroll view delegate
     
-    override func layoutSubviews() {
-        
-        super.layoutSubviews()
-        
-        
-        let maskLayer = CALayer()
-        maskLayer.frame = self.bounds
-        
-        let transparent = UIColor.clear.cgColor
-        let opaque = UIColor.white.cgColor
-        
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = CGRect(x: self.bounds.origin.x, y: 0, width: self.bounds.size.width, height: self.bounds.size.height)
-        gradientLayer.colors = [transparent, opaque, opaque, transparent]
-        
-        gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
-        gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
-        
-        // fading top and bottom, if startPoint and endPoint specified. Otherwise, left and right.
-        
-        var fadePercentage = 0.0//Double(self.fadeLength / self.frame.width)
-        
-        if self.hasFadingEdge {
-            fadePercentage = Double(self.fadeLength / self.frame.width)
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView == self.scrollView {
+            self.layoutSubviews()
         }
-        
-        gradientLayer.locations = [
-            0,
-            NSNumber(floatLiteral: fadePercentage),
-            NSNumber(floatLiteral: 1 - fadePercentage),
-            1
-        ]
-        
-        
-        maskLayer.addSublayer(gradientLayer)
-        self.layer.mask = maskLayer
     }
 }
