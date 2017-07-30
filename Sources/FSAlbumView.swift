@@ -258,6 +258,8 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
         self.textColorSelectorView.delegate = self
         
+        self.textAlphaSlider.value = 1.0
+        
         self.addSubview(textColorSelectorView)
         
         let rect = CGRect(x: 0, y: y, width: width, height: 35)
