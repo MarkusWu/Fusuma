@@ -8,11 +8,19 @@
 
 import UIKit
 
+protocol FSImageCropViewDelegate: class {
+    func imageCropView(_ imageCropView: FSImageCropView, didChangeContentFrame rect: CGRect)
+}
+
 final class FSImageCropView: UIScrollView, UIScrollViewDelegate {
     
     var imageView = UIImageView()
     
     var imageSize: CGSize?
+    
+    var imageOverlay = UIView()
+    
+    weak var imageCropViewDelegate: FSImageCropViewDelegate?
     
     var image: UIImage! = nil {
         
@@ -22,7 +30,9 @@ final class FSImageCropView: UIScrollView, UIScrollViewDelegate {
                 
                 if !imageView.isDescendant(of: self) {
                     self.imageView.alpha = 1.0
+                    self.imageOverlay.alpha = 1.0
                     self.addSubview(imageView)
+                    self.addSubview(imageOverlay)
                 }
                 
             } else {
@@ -67,6 +77,8 @@ final class FSImageCropView: UIScrollView, UIScrollViewDelegate {
             
             imageView.image = image
             
+            self.imageOverlay.frame = self.imageView.frame
+            
             self.zoomScale = 1.0
             
         }
@@ -81,6 +93,10 @@ final class FSImageCropView: UIScrollView, UIScrollViewDelegate {
         self.frame.size      = CGSize.zero
         self.clipsToBounds   = true
         self.imageView.alpha = 0.0
+        self.imageOverlay.alpha = 0.0
+        
+        self.imageOverlay.isUserInteractionEnabled = false
+        
         
         imageView.frame = CGRect(origin: CGPoint.zero, size: CGSize.zero)
         
@@ -130,7 +146,9 @@ final class FSImageCropView: UIScrollView, UIScrollViewDelegate {
         }
         
         imageView.frame = contentsFrame
+        self.imageOverlay.frame = contentsFrame
         
+        self.imageCropViewDelegate?.imageCropView(self, didChangeContentFrame: contentsFrame)
     }
     
     func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {

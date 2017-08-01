@@ -19,12 +19,16 @@ import Photos
     func albumViewAddingText(_ flag: Bool)
 }
 
-final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, PHPhotoLibraryChangeObserver, UIGestureRecognizerDelegate, UITextViewDelegate {
+final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, PHPhotoLibraryChangeObserver, UIGestureRecognizerDelegate, UITextViewDelegate, FSImageCropViewDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
-    @IBOutlet weak var imageCropOverlay: UIView!
+    var imageCropOverlay: UIView {
+        return self.imageCropView.imageOverlay
+    }
     @IBOutlet weak var imageCropView: FSImageCropView!
     @IBOutlet weak var imageCropViewContainer: UIView!
+    
+    @IBOutlet weak var imageCropViweContainerBackgroundOverlay: PartialTransparentView!
     
     @IBOutlet weak var brightnessSlider: UISlider!
     @IBOutlet weak var brightnessLessButton: UIButton!
@@ -195,6 +199,10 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         imageCropViewContainer.layer.shadowRadius  = 30.0
         imageCropViewContainer.layer.shadowOpacity = 0.9
         imageCropViewContainer.layer.shadowOffset  = CGSize.zero
+        
+        self.imageCropView.imageCropViewDelegate = self
+        self.imageCropViweContainerBackgroundOverlay.backgroundColor = UIColor.clear
+        self.imageCropViweContainerBackgroundOverlay.transparentRects = [self.imageCropViweContainerBackgroundOverlay.bounds]
         
         collectionView.register(UINib(nibName: "FSAlbumViewCell", bundle: Bundle(for: self.classForCoder)), forCellWithReuseIdentifier: "FSAlbumViewCell")
         collectionView.backgroundColor = fusumaBackgroundColor
@@ -507,9 +515,8 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     func convertEditImage() -> UIImage? {
         
         let myView = self.imageCropViewContainer!
-        
         UIGraphicsBeginImageContextWithOptions(myView.bounds.size, myView.isOpaque, 0.0)
-        myView.drawHierarchy(in: myView.bounds, afterScreenUpdates: false)
+        myView.drawHierarchy(in: myView.bounds, afterScreenUpdates: true)
         let snapshotImageFromMyView = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return snapshotImageFromMyView
@@ -532,9 +539,11 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     // MARK: - User interactions
     
     @IBAction func saveButtonTapped(_ sender: UIButton) {
+        self.imageCropView.backgroundColor = UIColor.white
         if let image = self.convertEditImage() {
             self.saveImageToCameraRoll(image: image)
         }
+        self.imageCropView.backgroundColor = fusumaBackgroundColor
     }
     
     @IBAction func clearTextButtonTapped(_ sender: UIButton) {
@@ -676,6 +685,12 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         if textView == self.textView {
             self.updateTextViewLayoutIfNeeded()
         }
+    }
+    
+    // MARK: - Image crop view delegate
+    
+    func imageCropView(_ imageCropView: FSImageCropView, didChangeContentFrame rect: CGRect) {
+        self.imageCropViweContainerBackgroundOverlay.transparentRects = [rect]
     }
     
     //MARK: - PHPhotoLibraryChangeObserver

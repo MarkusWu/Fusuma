@@ -560,7 +560,9 @@ public class FusumaViewController: UIViewController {
         var image:UIImage? = nil
         
         if self.photoEditable {
+            self.albumView.imageCropView.backgroundColor = UIColor.white
             image = self.albumView.convertEditImage()
+            self.albumView.imageCropView.backgroundColor = fusumaBackgroundColor
         }
         
         if image != nil || !fusumaCropImage {
