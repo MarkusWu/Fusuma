@@ -44,6 +44,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var textViewOverlay: UIView!
+    @IBOutlet weak var textViewDoneEditButton: UIButton!
     
     @IBOutlet weak var textAlphaContainer: UIView!
     @IBOutlet weak var textAlphaSlider: UISlider!
@@ -81,6 +82,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
             if self.addingText {
                 
                 self.textViewOverlay.isHidden = false
+                self.textViewDoneEditButton.isHidden = false
                 self.textView.isHidden = false
                 
                 self.panOnTextView.isEnabled = false
@@ -101,6 +103,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
                 self.updateTextViewLayoutIfNeeded(false)
                 
                 self.textViewOverlay.isHidden = true
+                self.textViewDoneEditButton.isHidden = true
                 
                 if self.textView.text == nil || self.textView.text.isEmpty {
                     self.textView.isHidden = true

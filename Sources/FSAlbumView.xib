@@ -52,27 +52,7 @@
                         </scrollView>
                         <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1jU-HJ-TyD">
                             <rect key="frame" x="0.0" y="0.0" width="400" height="400"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n8W-Pw-C0A">
-                                    <rect key="frame" x="322" y="8" width="70" height="30"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="70" id="1te-OV-ecH"/>
-                                        <constraint firstAttribute="height" constant="30" id="7qC-Re-5qz"/>
-                                    </constraints>
-                                    <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="17"/>
-                                    <state key="normal" title="Done">
-                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="addingTextDoneButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="LFO-nj-bmY"/>
-                                    </connections>
-                                </button>
-                            </subviews>
                             <color key="backgroundColor" white="0.0" alpha="0.55000000000000004" colorSpace="calibratedWhite"/>
-                            <constraints>
-                                <constraint firstItem="n8W-Pw-C0A" firstAttribute="top" secondItem="1jU-HJ-TyD" secondAttribute="top" constant="8" id="XmD-Q1-dkt"/>
-                                <constraint firstAttribute="trailing" secondItem="n8W-Pw-C0A" secondAttribute="trailing" constant="8" id="yqr-q3-F0W"/>
-                            </constraints>
                         </view>
                         <textView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" indicatorStyle="white" text="Text goes there" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="40R-H3-OK5">
                             <rect key="frame" x="16" y="180" width="368" height="40"/>
@@ -128,6 +108,20 @@
                         <action selector="brightnessSliderValueDidChange:" destination="iN0-l3-epB" eventType="valueChanged" id="Fui-tk-MOO"/>
                     </connections>
                 </slider>
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n8W-Pw-C0A">
+                    <rect key="frame" x="322" y="68" width="70" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="70" id="1te-OV-ecH"/>
+                        <constraint firstAttribute="height" constant="30" id="7qC-Re-5qz"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="17"/>
+                    <state key="normal" title="Done">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <connections>
+                        <action selector="addingTextDoneButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="LFO-nj-bmY"/>
+                    </connections>
+                </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i59-73-S3m">
                     <rect key="frame" x="16" y="384" width="35" height="60"/>
                     <constraints>
@@ -244,7 +238,9 @@
                 <constraint firstItem="SdH-Ok-YOx" firstAttribute="centerX" secondItem="90B-0c-ych" secondAttribute="centerX" id="9O5-AF-NNk"/>
                 <constraint firstItem="dek-Mm-noj" firstAttribute="leading" secondItem="JAw-D4-Epa" secondAttribute="trailing" constant="24" id="AAO-vc-mUI"/>
                 <constraint firstItem="i59-73-S3m" firstAttribute="bottom" secondItem="90B-0c-ych" secondAttribute="bottom" constant="-16" id="CbW-dp-o8R"/>
+                <constraint firstItem="n8W-Pw-C0A" firstAttribute="trailing" secondItem="90B-0c-ych" secondAttribute="trailing" constant="-8" id="G3d-bF-cgl"/>
                 <constraint firstItem="SdH-Ok-YOx" firstAttribute="top" secondItem="90B-0c-ych" secondAttribute="top" constant="8" id="Hq4-qV-iU9"/>
+                <constraint firstItem="n8W-Pw-C0A" firstAttribute="top" secondItem="90B-0c-ych" secondAttribute="top" constant="8" id="NfV-rf-saO"/>
                 <constraint firstItem="90B-0c-ych" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Nqq-tJ-MXy"/>
                 <constraint firstItem="hSL-oI-NAu" firstAttribute="leading" secondItem="90B-0c-ych" secondAttribute="leading" id="Oh7-lE-z1D"/>
                 <constraint firstItem="cQg-6y-LI4" firstAttribute="leading" secondItem="dek-Mm-noj" secondAttribute="trailing" constant="8" id="T63-dw-kRu"/>
@@ -286,6 +282,7 @@
                 <outlet property="textAlphaContainer" destination="6m2-Yg-ym0" id="RfS-jm-TF9"/>
                 <outlet property="textAlphaSlider" destination="HFc-Zm-irn" id="JA6-sO-457"/>
                 <outlet property="textView" destination="40R-H3-OK5" id="fxg-5P-26T"/>
+                <outlet property="textViewDoneEditButton" destination="n8W-Pw-C0A" id="VQ4-9W-jaZ"/>
                 <outlet property="textViewOverlay" destination="1jU-HJ-TyD" id="K4u-ZW-bDy"/>
                 <outletCollection property="iPadInactiveConstraints" destination="AAO-vc-mUI" collectionClass="NSMutableArray" id="Sur-G2-eib"/>
             </connections>
