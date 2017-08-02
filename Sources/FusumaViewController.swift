@@ -58,6 +58,8 @@ public var fusumaTintColor       = UIColor.hex("#F38181", alpha: 1.0)
 public var fusumaBackgroundColor = UIColor.hex("#3B3D45", alpha: 1.0)
 public var fusumaTextColors: [UIColor] = []
 
+public var fusumaLongPressPhotoLibCellEnabled = false
+
 public var markusAccessPhotosType: MarkusAccessPhotosType = .image
 
 public var fusumaAlbumImage : UIImage? = nil
@@ -117,7 +119,7 @@ public struct ImageMetadata {
 }
 
 //@objc public class FusumaViewController: UIViewController, FSCameraViewDelegate, FSAlbumViewDelegate {
-public class FusumaViewController: UIViewController {
+public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate {
     
     // Determine whether or not to reposition ImageCropContainer for better UI
     var shouldRepositionImageCropContainerOnViewDisapper = true
@@ -178,6 +180,11 @@ public class FusumaViewController: UIViewController {
     var mode: FusumaMode!
     public var modeOrder: FusumaModeOrder = .libraryFirst
     var willFilter = true
+    
+    @IBOutlet weak var floatingDoneButtonContainer: UIView!
+    @IBOutlet weak var floatingDoneButton: RoundedButton!
+    
+    private var albumCollectionViewLongPressRecog: UILongPressGestureRecognizer?
     
     @IBOutlet weak var photoLibraryViewerContainer: UIView!
     @IBOutlet weak var cameraShotContainer: UIView!
@@ -365,6 +372,16 @@ public class FusumaViewController: UIViewController {
             cameraView.fullAspectRatioConstraint.isActive = true
             cameraView.croppedAspectRatioConstraint?.isActive = false
         }
+        
+        if fusumaLongPressPhotoLibCellEnabled {
+            let longPress = UILongPressGestureRecognizer(target: self, action: #selector(self.photoLibContainerLongPressed(_:)))
+            longPress.delegate = self
+            self.photoLibraryViewerContainer.addGestureRecognizer(longPress)
+            
+            self.albumCollectionViewLongPressRecog = longPress
+            
+            self.floatingDoneButton.backgroundColor = fusumaTintColor
+        }
     }
     
     override public func viewWillAppear(_ animated: Bool) {
@@ -501,7 +518,49 @@ public class FusumaViewController: UIViewController {
             completion: nil)
     }
     
+    // MARK: - Gesture delegate
+    
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        
+        if gestureRecognizer === self.albumCollectionViewLongPressRecog {
+            let p = touch.location(in: self.photoLibraryViewerContainer)
+            if self.albumView.collectionView.frame.contains(p) {
+                return true
+            } else {
+                return false
+            }
+        }
+        
+        return true
+    }
+    
     // MARK: - User interactions
+    
+    func photoLibContainerLongPressed(_ gr: UILongPressGestureRecognizer) {
+        if gr.state == .began {
+            let p = gr.location(in: self.albumView.collectionView)
+            
+            if let indexPath = self.albumView.collectionView.indexPathForItem(at: p) {
+                if let cell = self.albumView.collectionView.cellForItem(at: indexPath) {
+                    if cell.isSelected {
+                        // handle here
+                        var p = gr.location(in: self.photoLibraryViewerContainer)
+                        
+                        p.x = min(p.x, self.photoLibraryViewerContainer.bounds.maxX)
+                        p.x = max(p.x, 0)
+                        
+                        p.y += 30
+                        
+                        self.floatingDoneButtonContainer.center = p
+                        
+                        self.photoLibraryViewerContainer.bringSubview(toFront: self.floatingDoneButtonContainer)
+                        UIUtil.hide(false, view: self.floatingDoneButtonContainer)
+                    }
+                }
+            } else {
+            }
+        }
+    }
     
     @IBAction func previewButtonTapped(_ sender: UIButton) {
         if self.albumView.brightnessSlider.isHidden {
@@ -668,7 +727,12 @@ extension FusumaViewController: FSAlbumViewDelegate, FSCameraViewDelegate, FSVid
         self.updateDoneButtonVisibility()
     }
     
-    // MARK: FSAlbumViewDelegate
+    // MARK: - FSAlbumViewDelegate
+    
+    public func ablumCollectionView(didSelectItemAt indexPath: IndexPath) {
+        UIUtil.hide(true, view: self.floatingDoneButtonContainer)
+    }
+    
     public func albumViewCameraRollUnauthorized() {
         delegate?.fusumaCameraRollUnauthorized()
     }

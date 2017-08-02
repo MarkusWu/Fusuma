@@ -23,6 +23,7 @@ class ViewController: UIViewController, FusumaDelegate {
         self.fileUrlLabel.text = ""
         
         fusumaImageOverlayBrightness = 0.88
+        fusumaLongPressPhotoLibCellEnabled = true
 //        fusumaTextColors = [UIColor.white, UIColor.black, UIColor.magenta, UIColor.blue, UIColor.purple, UIColor.brown]
         
         fusumaTextColors = Array(repeating: UIColor.magenta, count: 10)

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0D0B2C4C1F2E49CC00FAF0F9 /* MaterialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D0B2C4B1F2E49CC00FAF0F9 /* MaterialView.swift */; };
 		0D25406C1F30DD1B00231D49 /* PartialTransparentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D25406B1F30DD1B00231D49 /* PartialTransparentView.swift */; };
+		0D450B2C1F3229D7008B263F /* UIUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D450B2B1F3229D7008B263F /* UIUtil.swift */; };
 		0D9934591F27EADB00571709 /* ColorSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9934561F27EADB00571709 /* ColorSelectorView.swift */; };
 		0D99345A1F27EADB00571709 /* ColorSelectorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0D9934571F27EADB00571709 /* ColorSelectorView.xib */; };
 		0D99345B1F27EADB00571709 /* RoundedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D9934581F27EADB00571709 /* RoundedButton.swift */; };
@@ -35,6 +36,7 @@
 /* Begin PBXFileReference section */
 		0D0B2C4B1F2E49CC00FAF0F9 /* MaterialView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaterialView.swift; sourceTree = "<group>"; };
 		0D25406B1F30DD1B00231D49 /* PartialTransparentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PartialTransparentView.swift; sourceTree = "<group>"; };
+		0D450B2B1F3229D7008B263F /* UIUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIUtil.swift; sourceTree = "<group>"; };
 		0D9934561F27EADB00571709 /* ColorSelectorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorSelectorView.swift; sourceTree = "<group>"; };
 		0D9934571F27EADB00571709 /* ColorSelectorView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ColorSelectorView.xib; sourceTree = "<group>"; };
 		0D9934581F27EADB00571709 /* RoundedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedButton.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 		D77CA28D1CBBDEB300C4BAC4 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				0D450B2B1F3229D7008B263F /* UIUtil.swift */,
 				0D25406B1F30DD1B00231D49 /* PartialTransparentView.swift */,
 				0D0B2C4B1F2E49CC00FAF0F9 /* MaterialView.swift */,
 				0D9934561F27EADB00571709 /* ColorSelectorView.swift */,
@@ -216,6 +219,7 @@
 				0D99345B1F27EADB00571709 /* RoundedButton.swift in Sources */,
 				D77CA2A01CBBDEB300C4BAC4 /* FSConstants.swift in Sources */,
 				D77CA2A21CBBDEB300C4BAC4 /* FusumaViewController.swift in Sources */,
+				0D450B2C1F3229D7008B263F /* UIUtil.swift in Sources */,
 				52412AC41CA61C9F0073C4BE /* AppDelegate.swift in Sources */,
 				D77CA2A11CBBDEB300C4BAC4 /* FSImageCropView.swift in Sources */,
 			);

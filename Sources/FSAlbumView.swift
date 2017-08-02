@@ -17,6 +17,8 @@ import Photos
     func albumViewCameraRollAuthorized()
     
     func albumViewAddingText(_ flag: Bool)
+    
+    func ablumCollectionView(didSelectItemAt indexPath: IndexPath)
 }
 
 final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, PHPhotoLibraryChangeObserver, UIGestureRecognizerDelegate, UITextViewDelegate, FSImageCropViewDelegate {
@@ -663,6 +665,8 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
         self.cropImageContainerNormalPosition()
         collectionView.scrollToItem(at: indexPath, at: .top, animated: true)
+        
+        self.delegate?.ablumCollectionView(didSelectItemAt: indexPath)
     }
     
     
@@ -905,31 +909,10 @@ extension FSAlbumView {
 
 extension FSAlbumView: ColorSelectorViewDelegate {
     
-    func hide(_ hide: Bool, view: UIView) {
-        if hide {
-            if view.alpha == 0.0 {
-                return
-            }
-            
-            UIView.animate(withDuration: 0.3, animations: {
-                view.alpha = 0.0
-            })
-            
-        } else {
-            if view.alpha == 1.0 {
-                return
-            }
-            
-            UIView.animate(withDuration: 0.3, animations: {
-                view.alpha = 1.0
-            })
-        }
-    }
-    
     func colorSelectorView(_ v: ColorSelectorView, didSelectColor color: UIColor) {
         self.textView.textColor = color.withAlphaComponent(self.textAlpha)
         
-        self.hide(true, view: textAlphaContainer)
+        UIUtil.hide(true, view: textAlphaContainer)
     }
     
     func colorSelectorView(_ v: ColorSelectorView, diSelectAtIndex index: Int) {
@@ -949,7 +932,7 @@ extension FSAlbumView: ColorSelectorViewDelegate {
             
             textAlphaContainer.center.x = centerX
             
-            self.hide(false, view: textAlphaContainer)
+            UIUtil.hide(false, view: textAlphaContainer)
         }
     }
 }
