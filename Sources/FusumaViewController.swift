@@ -543,13 +543,14 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
             if let indexPath = self.albumView.collectionView.indexPathForItem(at: p) {
                 if let cell = self.albumView.collectionView.cellForItem(at: indexPath) {
                     if cell.isSelected {
-                        // handle here
                         var p = gr.location(in: self.photoLibraryViewerContainer)
                         
-                        p.x = min(p.x, self.photoLibraryViewerContainer.bounds.maxX)
-                        p.x = max(p.x, 0)
+                        let xOffset = self.floatingDoneButton.bounds.midX + 5
                         
-                        p.y += 30
+                        p.x = min(p.x, self.photoLibraryViewerContainer.bounds.maxX - xOffset)
+                        p.x = max(p.x, 0 + xOffset)
+                        
+                        p.y -= 40
                         
                         self.floatingDoneButtonContainer.center = p
                         
