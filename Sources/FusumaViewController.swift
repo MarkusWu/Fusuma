@@ -191,6 +191,10 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     @IBOutlet weak var videoShotContainer: UIView!
     
     @IBOutlet weak var titleLabel: UILabel!
+    
+    @IBOutlet weak var statusBarView: UIView!
+    @IBOutlet weak var statusBarHeightConstr: NSLayoutConstraint!
+    
     @IBOutlet weak var menuView: UIView!
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var libraryButton: UIButton!
@@ -240,6 +244,8 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     
     override public func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.statusBarHeightConstr.constant = UIApplication.shared.statusBarFrame.height
         
         let nc = NotificationCenter.default
         
