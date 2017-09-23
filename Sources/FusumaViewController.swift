@@ -262,6 +262,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         videoView.delegate = self
         
         menuView.backgroundColor = fusumaBackgroundColor
+        self.statusBarView.backgroundColor = fusumaBackgroundColor
         menuView.addBottomBorder(UIColor.black, width: 1.0)
         
         let bundle = Bundle(for: self.classForCoder)
@@ -830,6 +831,7 @@ private extension FusumaViewController {
         }
         doneButton.isHidden = !hasGalleryPermission
         self.view.bringSubview(toFront: menuView)
+        self.view.bringSubview(toFront: self.statusBarView)
     }
     
     
