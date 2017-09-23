@@ -16,6 +16,7 @@ import AVFoundation
 final class FSVideoCameraView: UIView {
 
     @IBOutlet weak var previewViewContainer: UIView!
+    @IBOutlet weak var previewViewContainerTopConstr: NSLayoutConstraint!
     @IBOutlet weak var shotButton: UIButton!
     @IBOutlet weak var flashButton: UIButton!
     @IBOutlet weak var flipButton: UIButton!

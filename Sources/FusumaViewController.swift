@@ -261,6 +261,12 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         albumView.delegate  = self
         videoView.delegate = self
         
+        let topOffset = UIApplication.shared.statusBarFrame.height + CGFloat(40)
+        
+        cameraView.previewViewContainerTopConstr.constant = topOffset
+        albumView.imageCropViewOriginalConstraintTop = topOffset
+        videoView.previewViewContainerTopConstr.constant = topOffset
+        
         menuView.backgroundColor = fusumaBackgroundColor
         self.statusBarView.backgroundColor = fusumaBackgroundColor
         menuView.addBottomBorder(UIColor.black, width: 1.0)

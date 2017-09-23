@@ -18,6 +18,7 @@ import Photos
 final class FSCameraView: UIView, UIGestureRecognizerDelegate {
 
     @IBOutlet weak var previewViewContainer: UIView!
+    @IBOutlet weak var previewViewContainerTopConstr: NSLayoutConstraint!
     @IBOutlet weak var shotButton: UIButton!
     @IBOutlet weak var flashButton: UIButton!
     @IBOutlet weak var flipButton: UIButton!

@@ -42,6 +42,7 @@ class ViewController: UIViewController, FusumaDelegate {
         fusuma.initialSelectedColorIndex = 3
         
         //        fusumaCropImage = false
+        fusuma.hasVideo = true
         
         fusuma.delegate = self
         fusuma.cropHeightRatio = 1.0
