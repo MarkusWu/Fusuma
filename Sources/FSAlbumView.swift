@@ -519,6 +519,10 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     
     func convertEditImage() -> UIImage? {
         
+        guard self.imageCropView.image != nil else {
+            return nil
+        }
+        
         let myView = self.imageCropViewContainer!
         UIGraphicsBeginImageContextWithOptions(myView.bounds.size, myView.isOpaque, 0.0)
         myView.drawHierarchy(in: myView.bounds, afterScreenUpdates: true)
