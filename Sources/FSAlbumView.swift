@@ -783,12 +783,36 @@ extension FSAlbumView {
                                             targetSize: CGSize(width: asset.pixelWidth, height: asset.pixelHeight),
                                             contentMode: .aspectFill,
                                             options: options) {
-                                                result, info in
+                                                [weak self] result, info in
+                                                
+                                                guard self != nil else {
+                                                    return
+                                                }
+                                                
+                                                if result == nil {
+                                                    if let i = info {
+                                                        if let error = i[PHImageErrorKey] as? Error {
+                                                            print("error: \(error.localizedDescription)")
+                                                            
+                                                            if let vc = self!.delegate as? UIViewController {
+                                                                if vc.view.window != nil {
+                                                                    let alert = UIAlertController(title: "Cannot Download Photo", message: "There was an error downloading photo. Please try again later.", preferredStyle: .alert)
+                                                                    let okayAction = UIAlertAction(title: "Okay", style: .default, handler: nil)
+                                                                    alert.addAction(okayAction)
+                                                                    vc.present(alert, animated: true, completion: nil)
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                                 
                                                 DispatchQueue.main.async(execute: {
-                                                    
-                                                    self.imageCropView.imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
-                                                    self.imageCropView.image = result
+                                                    [weak self] in
+                                                    guard self != nil else {
+                                                        return
+                                                    }
+                                                    self!.imageCropView.imageSize = CGSize(width: asset.pixelWidth, height: asset.pixelHeight)
+                                                    self!.imageCropView.image = result
                                                 })
             }
         })
