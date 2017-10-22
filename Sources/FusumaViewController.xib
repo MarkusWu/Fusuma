@@ -97,7 +97,7 @@
                                 <constraint firstAttribute="width" constant="40" id="PQP-9C-4h0"/>
                                 <constraint firstAttribute="height" constant="40" id="Ygl-n3-Z0d"/>
                             </constraints>
-                            <inset key="contentEdgeInsets" minX="6" minY="6" maxX="6" maxY="6"/>
+                            <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
                             <state key="normal" image="ic_close"/>
                             <state key="selected" image="ic_close"/>
                             <state key="highlighted" image="ic_close"/>
