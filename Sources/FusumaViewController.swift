@@ -280,13 +280,19 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     override public func viewDidLoad() {
         super.viewDidLoad()
         
+        var topOffset: CGFloat = 0
+        
         if self.safeAreaInsets.top > 0 {
             let top = self.safeAreaInsets.top
             let bottom = self.safeAreaInsets.bottom
             self.statusBarHeightConstr.constant = top
             self.libraryButtonBottomConstr.constant = bottom
+            
+            topOffset = top + CGFloat(40)
         } else {
             let height = self.statusBarHeight ?? UIApplication.shared.statusBarFrame.height
+            
+            topOffset = height + CGFloat(40)
             
             self.statusBarHeightConstr.constant = height
         }
@@ -304,8 +310,6 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         cameraView.delegate = self
         albumView.delegate  = self
         videoView.delegate = self
-        
-        let topOffset = UIApplication.shared.statusBarFrame.height + CGFloat(40)
         
         cameraView.previewViewContainerTopConstr.constant = topOffset
         albumView.imageCropViewOriginalConstraintTop = topOffset
