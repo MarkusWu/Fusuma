@@ -54,8 +54,15 @@ public extension FusumaDelegate {
 }
 
 public var fusumaBaseTintColor   = UIColor.hex("#FFFFFF", alpha: 1.0)
+/**
+ Use fusumaSelectedColor or fusumaDeselectColor instead
+ */
+@available(*, deprecated)
 public var fusumaTintColor       = UIColor.hex("#F38181", alpha: 1.0)
 public var fusumaBackgroundColor = UIColor.hex("#3B3D45", alpha: 1.0)
+public var fusumaSelectedColor = UIColor.hex("#F38181", alpha: 1.0)
+public var fusumaDeselectColor = UIColor.hex("#FFFFFF", alpha: 1.0)
+
 public var fusumaTextColors: [UIColor] = []
 
 public var fusumaLongPressPhotoLibCellEnabled = false
@@ -141,6 +148,33 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         return self.instance!
     }
     
+    /**
+     Set the height of the status bar for Fusuma. UIApplication statusBarFrame is used if value is nil.
+     */
+    public var statusBarHeight: CGFloat? {
+        didSet {
+            
+            guard self.statusBarHeightConstr != nil else {
+                return
+            }
+            
+            if self.safeAreaInsets.top > 0 {
+                let top = self.safeAreaInsets.top
+                let bottom = self.safeAreaInsets.bottom
+                self.statusBarHeightConstr.constant = top
+                self.libraryButtonBottomConstr.constant = bottom
+            } else {
+                let height = self.statusBarHeight ?? UIApplication.shared.statusBarFrame.height
+                
+                self.statusBarHeightConstr.constant = height
+            }
+        }
+    }
+    
+    public var safeAreaInsets: UIEdgeInsets = .zero
+    
+    private var viewFirstAppear = true
+    
     public var imageOveralyBrightness: Float {
         return self.albumView.brightnessSlider.value
     }
@@ -198,6 +232,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     @IBOutlet weak var menuView: UIView!
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var libraryButton: UIButton!
+    @IBOutlet weak var libraryButtonBottomConstr: NSLayoutConstraint!
     @IBOutlet weak var cameraButton: UIButton!
     @IBOutlet weak var videoButton: UIButton!
     @IBOutlet weak var doneButton: UIButton!
@@ -245,7 +280,16 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     override public func viewDidLoad() {
         super.viewDidLoad()
         
-        self.statusBarHeightConstr.constant = UIApplication.shared.statusBarFrame.height
+        if self.safeAreaInsets.top > 0 {
+            let top = self.safeAreaInsets.top
+            let bottom = self.safeAreaInsets.bottom
+            self.statusBarHeightConstr.constant = top
+            self.libraryButtonBottomConstr.constant = bottom
+        } else {
+            let height = self.statusBarHeight ?? UIApplication.shared.statusBarFrame.height
+            
+            self.statusBarHeightConstr.constant = height
+        }
         
         let nc = NotificationCenter.default
         
@@ -288,24 +332,26 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
             libraryButton.setImage(albumImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
             libraryButton.setImage(albumImage?.withRenderingMode(.alwaysTemplate), for: .highlighted)
             libraryButton.setImage(albumImage?.withRenderingMode(.alwaysTemplate), for: .selected)
-            libraryButton.tintColor = fusumaTintColor
+            libraryButton.tintColor = fusumaSelectedColor
             libraryButton.adjustsImageWhenHighlighted = false
             
             cameraButton.setImage(cameraImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
             cameraButton.setImage(cameraImage?.withRenderingMode(.alwaysTemplate), for: .highlighted)
             cameraButton.setImage(cameraImage?.withRenderingMode(.alwaysTemplate), for: .selected)
-            cameraButton.tintColor  = fusumaTintColor
+            cameraButton.tintColor  = fusumaSelectedColor
             cameraButton.adjustsImageWhenHighlighted  = false
             
             closeButton.setImage(closeImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
             closeButton.setImage(closeImage?.withRenderingMode(.alwaysTemplate), for: .highlighted)
             closeButton.setImage(closeImage?.withRenderingMode(.alwaysTemplate), for: .selected)
             closeButton.tintColor = fusumaBaseTintColor
+            self.previewButton.tintColor = fusumaBaseTintColor
+            self.expandArrowButton.tintColor = fusumaBaseTintColor
             
             videoButton.setImage(videoImage, for: UIControlState())
             videoButton.setImage(videoImage, for: .highlighted)
             videoButton.setImage(videoImage, for: .selected)
-            videoButton.tintColor  = fusumaTintColor
+            videoButton.tintColor  = fusumaSelectedColor
             videoButton.adjustsImageWhenHighlighted = false
             
             doneButton.setImage(checkImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
@@ -393,7 +439,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
             
             self.albumCollectionViewLongPressRecog = longPress
             
-            self.floatingDoneButton.backgroundColor = fusumaTintColor
+            self.floatingDoneButton.backgroundColor = fusumaBaseTintColor
         }
     }
     
@@ -434,6 +480,10 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        if self.viewFirstAppear {
+            self.viewFirstAppear = false
+        }
         
         guard self.didDisappear else {
             return
@@ -859,14 +909,14 @@ private extension FusumaViewController {
     }
     
     func dishighlightButtons() {
-        cameraButton.tintColor  = fusumaBaseTintColor
-        libraryButton.tintColor = fusumaBaseTintColor
+        cameraButton.tintColor  = fusumaDeselectColor
+        libraryButton.tintColor = fusumaDeselectColor
         
         if cameraButton.layer.sublayers?.count > 1 {
             
             for layer in cameraButton.layer.sublayers! {
                 
-                if let borderColor = layer.borderColor , UIColor(cgColor: borderColor) == fusumaTintColor {
+                if let borderColor = layer.borderColor , UIColor(cgColor: borderColor) == fusumaSelectedColor {
                     
                     layer.removeFromSuperlayer()
                 }
@@ -878,7 +928,7 @@ private extension FusumaViewController {
             
             for layer in libraryButton.layer.sublayers! {
                 
-                if let borderColor = layer.borderColor , UIColor(cgColor: borderColor) == fusumaTintColor {
+                if let borderColor = layer.borderColor , UIColor(cgColor: borderColor) == fusumaSelectedColor {
                     
                     layer.removeFromSuperlayer()
                 }
@@ -888,13 +938,13 @@ private extension FusumaViewController {
         
         if let videoButton = videoButton {
             
-            videoButton.tintColor = fusumaBaseTintColor
+            videoButton.tintColor = fusumaDeselectColor
             
             if videoButton.layer.sublayers?.count > 1 {
                 
                 for layer in videoButton.layer.sublayers! {
                     
-                    if let borderColor = layer.borderColor , UIColor(cgColor: borderColor) == fusumaTintColor {
+                    if let borderColor = layer.borderColor , UIColor(cgColor: borderColor) == fusumaSelectedColor {
                         
                         layer.removeFromSuperlayer()
                     }
@@ -907,9 +957,9 @@ private extension FusumaViewController {
     
     func highlightButton(_ button: UIButton) {
         
-        button.tintColor = fusumaTintColor
+        button.tintColor = fusumaSelectedColor
         
-        button.addBottomBorder(fusumaTintColor, width: 3)
+        button.addBottomBorder(fusumaSelectedColor, width: 3)
     }
 }
 

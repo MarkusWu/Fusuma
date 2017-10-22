@@ -25,6 +25,10 @@ class ViewController: UIViewController, FusumaDelegate {
         fusumaImageOverlayBrightness = 0.88
         fusumaLongPressPhotoLibCellEnabled = true
 //        fusumaTextColors = [UIColor.white, UIColor.black, UIColor.magenta, UIColor.blue, UIColor.purple, UIColor.brown]
+        fusumaBackgroundColor = UIColor.white
+        fusumaBaseTintColor = UIColor.black
+        fusumaSelectedColor = UIColor.black
+        fusumaDeselectColor = UIColor.lightGray
         
         fusumaTextColors = Array(repeating: UIColor.magenta, count: 10)
     }
@@ -42,8 +46,12 @@ class ViewController: UIViewController, FusumaDelegate {
         fusuma.initialSelectedColorIndex = 3
         
         //        fusumaCropImage = false
+        if #available(iOS 11.0, *) {
+            fusuma.safeAreaInsets = self.view.safeAreaInsets
+        }
+        fusuma.photoEditable = false
+        fusuma.statusBarHeight = 0
         fusuma.hasVideo = true
-        
         fusuma.delegate = self
         fusuma.cropHeightRatio = 1.0
         fusumaSavesImage = true

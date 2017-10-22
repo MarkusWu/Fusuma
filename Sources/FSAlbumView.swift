@@ -230,7 +230,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         self.textView.text = ""
         self.updateTextViewLayoutIfNeeded()
         
-        self.brightnessSlider.tintColor = fusumaTintColor
+        self.brightnessSlider.tintColor = fusumaBaseTintColor
         self.brightnessSlider.value = fusumaImageOverlayBrightness
         
         
@@ -250,7 +250,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         let per = min((fusumaInitialFontSize - fusumaMinFontSize) / interval, 1.0)
         self.fontSizeSlider.value = per
         
-        self.fontSizeSlider.tintColor = fusumaTintColor
+        self.fontSizeSlider.tintColor = fusumaBaseTintColor
         self.textView.font = self.textView.font?.withSize(CGFloat(fusumaInitialFontSize))
         
         

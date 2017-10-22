@@ -5,7 +5,7 @@
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -24,6 +24,7 @@
                 <outlet property="floatingDoneButton" destination="g1A-18-fHf" id="g7G-xw-ydA"/>
                 <outlet property="floatingDoneButtonContainer" destination="x3L-pS-XmP" id="0Cr-K4-8ly"/>
                 <outlet property="libraryButton" destination="cph-QM-jcJ" id="a4Y-xk-mq9"/>
+                <outlet property="libraryButtonBottomConstr" destination="yNj-Nn-23m" id="rxT-nw-W90"/>
                 <outlet property="menuView" destination="8ba-kc-jlJ" id="Gcf-Em-wAP"/>
                 <outlet property="photoLibraryViewerContainer" destination="1Pk-29-mUG" id="buU-Cs-7qz"/>
                 <outlet property="previewButton" destination="bqn-1T-KyI" id="0x6-Iv-dCt"/>
@@ -132,7 +133,7 @@
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CAMERA ROLL" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cxN-Q8-Lgd">
-                            <rect key="frame" x="147" y="7.6666666666666661" width="120" height="21"/>
+                            <rect key="frame" x="147" y="7.6666666666666679" width="120" height="21"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="120" id="AuW-Bs-cEY"/>
                                 <constraint firstAttribute="height" constant="21" id="JDW-4S-H17"/>
@@ -142,7 +143,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gLa-66-axy" userLabel="expand arrow button">
-                            <rect key="frame" x="267" y="10.666666666666666" width="15" height="14.999999999999998"/>
+                            <rect key="frame" x="267" y="10.666666666666668" width="15" height="15"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="15" id="6Ow-Qr-SHq"/>
                                 <constraint firstAttribute="height" constant="15" id="fur-dC-EM3"/>
@@ -222,7 +223,6 @@
                 <constraint firstItem="1Pk-29-mUG" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="0rm-S1-9o9"/>
                 <constraint firstItem="sCN-QB-mCu" firstAttribute="leading" secondItem="cph-QM-jcJ" secondAttribute="trailing" id="8Df-A3-2bv"/>
                 <constraint firstItem="8ba-kc-jlJ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="ADX-qy-sfu"/>
-                <constraint firstAttribute="bottom" secondItem="sCN-QB-mCu" secondAttribute="bottom" id="Eol-81-9UT"/>
                 <constraint firstItem="sCN-QB-mCu" firstAttribute="top" secondItem="cph-QM-jcJ" secondAttribute="top" id="K1G-U0-Vgk"/>
                 <constraint firstItem="CFH-FU-LPW" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="QcH-4o-bGU"/>
                 <constraint firstItem="sCN-QB-mCu" firstAttribute="top" secondItem="8ew-Zi-63G" secondAttribute="top" id="TRC-fO-jAk"/>
