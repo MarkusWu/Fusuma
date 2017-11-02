@@ -341,12 +341,21 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
                 if mode == AVCaptureFlashMode.off {
                     
                     device.flashMode = AVCaptureFlashMode.on
-                    flashButton.setImage(flashOnImage, for: UIControlState())
+                    if fusumaTintIcons {
+                        flashButton.setImage(flashOnImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
+                    } else {
+                        flashButton.setImage(flashOnImage, for: UIControlState())
+                    }
                     
                 } else if mode == AVCaptureFlashMode.on {
                     
                     device.flashMode = AVCaptureFlashMode.off
-                    flashButton.setImage(flashOffImage, for: UIControlState())
+                    if fusumaTintIcons {
+                        flashButton.setImage(flashOffImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
+                    } else {
+                        flashButton.setImage(flashOffImage, for: UIControlState())
+                    }
+                    
                 }
                 
                 device.unlockForConfiguration()
@@ -355,7 +364,11 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
 
         } catch _ {
 
-            flashButton.setImage(flashOffImage, for: UIControlState())
+            if fusumaTintIcons {
+                flashButton.setImage(flashOffImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
+            } else {
+                flashButton.setImage(flashOffImage, for: UIControlState())
+            }
             return
         }
  
@@ -425,7 +438,11 @@ extension FSCameraView {
                 try device.lockForConfiguration()
                 
                 device.flashMode = AVCaptureFlashMode.off
-                flashButton.setImage(flashOffImage, for: UIControlState())
+                if fusumaTintIcons {
+                    flashButton.setImage(flashOffImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
+                } else {
+                    flashButton.setImage(flashOffImage, for: UIControlState())
+                }
                 
                 device.unlockForConfiguration()
                 
