@@ -282,7 +282,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         
         var topOffset: CGFloat = 0
         
-        if self.safeAreaInsets.top > 0 {
+        if self.safeAreaInsets.top > 20 {
             let top = self.safeAreaInsets.top
             let bottom = self.safeAreaInsets.bottom
             self.statusBarHeightConstr.constant = top
@@ -317,7 +317,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         
         menuView.backgroundColor = fusumaBackgroundColor
         self.statusBarView.backgroundColor = fusumaBackgroundColor
-        menuView.addBottomBorder(UIColor.black, width: 1.0)
+        menuView.addBottomBorder(UIColor.lightGray, width: 0.5)
         
         let bundle = Bundle(for: self.classForCoder)
         
