@@ -78,7 +78,10 @@ public var fusumaFlashOnImage : UIImage? = nil
 public var fusumaFlashOffImage : UIImage? = nil
 public var fusumaFlipImage : UIImage? = nil
 public var fusumaShotImage : UIImage? = nil
-public var fusumaAutoDismiss = true
+/**
+ Determine if fusumaViewController should auto dismiss on image taken, doneButtonPressed. True, by default.
+ */
+public var fusumaAutoDismiss = false
 
 public var fusumaStartingMode: FusumaMode = .library
 
@@ -93,7 +96,15 @@ public var fusumaVideoStopImage : UIImage? = nil
 
 public var fusumaCropImage: Bool = true
 
+/**
+ Determine if an image should be saved to Photos App when taking image from camera. False, by default.
+ */
 public var fusumaSavesImage: Bool = false
+
+/**
+ UIModalTransitionStyle to use when presenting Photos. .crossDissolve, by default.
+ */
+public var fusumaPhotosModalTransitionStyle: UIModalTransitionStyle = .crossDissolve
 
 public var fusumaCameraRollTitle = "CAMERA ROLL"
 public var fusumaCameraTitle = "PHOTO"
@@ -1000,6 +1011,7 @@ extension FusumaViewController: UIImagePickerControllerDelegate, UINavigationCon
         self.shouldRepositionImageCropContainerOnViewDisapper = false
         
         imagePicker.mediaTypes = types
+        imagePicker.modalTransitionStyle = fusumaPhotosModalTransitionStyle
         self.present(imagePicker, animated: true, completion: nil)
     }
     
