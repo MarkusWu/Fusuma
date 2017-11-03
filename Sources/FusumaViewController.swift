@@ -106,6 +106,11 @@ public var fusumaSavesImage: Bool = false
  */
 public var fusumaPhotosModalTransitionStyle: UIModalTransitionStyle = .crossDissolve
 
+/**
+ Determine if the done button should be hidden in camera/video mode. False, by default.
+ */
+public var fusumaShowDoneButtonOnLibraryOnly = false
+
 public var fusumaCameraRollTitle = "CAMERA ROLL"
 public var fusumaCameraTitle = "PHOTO"
 public var fusumaVideoTitle = "VIDEO"
@@ -673,16 +678,32 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
             self.preferredModeOnWillAppear = .library
         }
         
+        self.doneButton.alpha = 1.0
+        
         changeMode(FusumaMode.library)
     }
     
     @IBAction func photoButtonPressed(_ sender: UIButton) {
         self.preferredModeOnWillAppear = .camera
+        
+        if fusumaShowDoneButtonOnLibraryOnly {
+            self.doneButton.alpha = 0.0
+        } else {
+            self.doneButton.alpha = 1.0
+        }
+        
         changeMode(FusumaMode.camera)
     }
     
     @IBAction func videoButtonPressed(_ sender: UIButton) {
         self.preferredModeOnWillAppear = .video
+        
+        if fusumaShowDoneButtonOnLibraryOnly {
+            self.doneButton.alpha = 0.0
+        } else {
+            self.doneButton.alpha = 1.0
+        }
+        
         changeMode(FusumaMode.video)
     }
     
