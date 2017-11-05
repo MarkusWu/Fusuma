@@ -209,7 +209,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         return self.instance != nil
     }
     
-    public var photoEditable: Bool = false {
+    public var photoEditable: Bool = true {
         didSet {
             
             guard self.photoEditable != oldValue else {
