@@ -149,13 +149,13 @@ final class FSImageCropView: UIScrollView, UIScrollViewDelegate {
         
         imageView.frame = contentsFrame
         self.imageOverlay.frame = contentsFrame
+        
+        self.imageCropViewDelegate?.imageCropView(self, didChangeContentFrame: imageView.frame)
     }
     
     func scrollViewDidEndZooming(_ scrollView: UIScrollView, with view: UIView?, atScale scale: CGFloat) {
         
         self.contentSize = CGSize(width: imageView.frame.width + 1, height: imageView.frame.height + 1)
-        
-        self.imageCropViewDelegate?.imageCropView(self, didChangeContentFrame: imageView.frame)
     }
     
 }
