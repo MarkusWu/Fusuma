@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -20,6 +20,7 @@
                 <outlet property="cameraShotContainer" destination="CFH-FU-LPW" id="gvI-wh-cln"/>
                 <outlet property="closeButton" destination="Dx0-Tt-oZs" id="ci8-ub-48f"/>
                 <outlet property="doneButton" destination="5iB-Jh-kTh" id="jJj-Rx-7ob"/>
+                <outlet property="doneButtonIndicator" destination="dtc-fG-RKt" id="JyV-ay-KTh"/>
                 <outlet property="expandArrowButton" destination="gLa-66-axy" id="se1-91-zUv"/>
                 <outlet property="floatingDoneButton" destination="g1A-18-fHf" id="g7G-xw-ydA"/>
                 <outlet property="floatingDoneButtonContainer" destination="x3L-pS-XmP" id="0Cr-K4-8ly"/>
@@ -154,6 +155,9 @@
                                 <action selector="expandArrowButtonTapped:" destination="-1" eventType="touchUpInside" id="Ofa-CA-7Sn"/>
                             </connections>
                         </button>
+                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="dtc-fG-RKt" userLabel="Done Button Indicator">
+                            <rect key="frame" x="376" y="10" width="20" height="20"/>
+                        </activityIndicatorView>
                     </subviews>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
@@ -163,11 +167,13 @@
                         <constraint firstItem="Dx0-Tt-oZs" firstAttribute="leading" secondItem="8ba-kc-jlJ" secondAttribute="leading" constant="8" id="51K-wb-k3T"/>
                         <constraint firstItem="cxN-Q8-Lgd" firstAttribute="centerY" secondItem="Dx0-Tt-oZs" secondAttribute="centerY" id="5BY-tJ-KTH"/>
                         <constraint firstAttribute="height" constant="40" id="5ZE-04-Fz1"/>
+                        <constraint firstItem="dtc-fG-RKt" firstAttribute="centerX" secondItem="5iB-Jh-kTh" secondAttribute="centerX" id="Atw-yb-MY5"/>
                         <constraint firstAttribute="trailing" secondItem="5iB-Jh-kTh" secondAttribute="trailing" constant="8" id="CsQ-ni-3OY"/>
                         <constraint firstItem="gLa-66-axy" firstAttribute="centerY" secondItem="cxN-Q8-Lgd" secondAttribute="centerY" id="ONW-eH-GcB"/>
                         <constraint firstItem="cxN-Q8-Lgd" firstAttribute="centerX" secondItem="8ba-kc-jlJ" secondAttribute="centerX" id="Pg3-Q7-ka9"/>
                         <constraint firstItem="gLa-66-axy" firstAttribute="leading" secondItem="cxN-Q8-Lgd" secondAttribute="trailing" id="Siy-zx-XkE"/>
                         <constraint firstItem="bqn-1T-KyI" firstAttribute="centerY" secondItem="Dx0-Tt-oZs" secondAttribute="centerY" id="bCL-VO-qJT"/>
+                        <constraint firstItem="dtc-fG-RKt" firstAttribute="centerY" secondItem="5iB-Jh-kTh" secondAttribute="centerY" id="eZs-CP-HQq"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fa3-HD-PsQ" userLabel="Status Bar">

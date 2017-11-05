@@ -63,6 +63,8 @@ public var fusumaBackgroundColor = UIColor.hex("#3B3D45", alpha: 1.0)
 public var fusumaSelectedColor = UIColor.hex("#F38181", alpha: 1.0)
 public var fusumaDeselectColor = UIColor.hex("#FFFFFF", alpha: 1.0)
 
+public var fusumaIndicatorColor = UIColor.gray
+
 public var fusumaTextColors: [UIColor] = []
 
 public var fusumaLongPressPhotoLibCellEnabled = false
@@ -252,6 +254,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     @IBOutlet weak var cameraButton: UIButton!
     @IBOutlet weak var videoButton: UIButton!
     @IBOutlet weak var doneButton: UIButton!
+    @IBOutlet weak var doneButtonIndicator: UIActivityIndicatorView!
     @IBOutlet weak var expandArrowButton: UIButton!
     
     @IBOutlet weak var previewButton: UIButton!
@@ -376,6 +379,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
             
             doneButton.setImage(checkImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
             doneButton.tintColor = fusumaBaseTintColor
+            self.doneButtonIndicator.color = fusumaIndicatorColor
             
         } else {
             
@@ -713,9 +717,25 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         self.albumView.updateTextViewLayoutIfNeeded()
     }
     
+    private func startSelectingImageProcess() {
+        self.view.isUserInteractionEnabled = false
+        self.doneButton.alpha = 0.0
+        self.doneButtonIndicator.startAnimating()
+    }
+    
+    private func stopSelectingImageProcess() {
+        self.view.isUserInteractionEnabled = true
+        self.doneButtonIndicator.stopAnimating()
+        
+        UIView.animate(withDuration: 0.3, animations: {
+            [weak self] in
+            self?.doneButton.alpha = 1.0
+        })
+    }
+    
     @IBAction func doneButtonPressed(_ sender: UIButton) {
         
-        self.view.isUserInteractionEnabled = false
+        self.startSelectingImageProcess()
         
         let view = albumView.imageCropView
         
@@ -751,12 +771,12 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
                 [weak self] in
                 
                 guard self != nil else {
-                    self?.view.isUserInteractionEnabled = true
+                    self?.stopSelectingImageProcess()
                     return
                 }
                 
                 guard let phAsset = self?.albumView.phAsset else {
-                    self?.view.isUserInteractionEnabled = true
+                    self?.stopSelectingImageProcess()
                     return
                 }
                 
@@ -778,18 +798,18 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
                                                         [weak self] result, info in
                                                         
                                                         guard self != nil else {
-                                                            self?.view.isUserInteractionEnabled = true
+                                                            self?.stopSelectingImageProcess()
                                                             return
                                                         }
                                                         
                                                         guard let phAsset = self?.albumView.phAsset else {
-                                                            self?.view.isUserInteractionEnabled = true
+                                                            self?.stopSelectingImageProcess()
                                                             return
                                                         }
                                                         
                                                         DispatchQueue.main.async(execute: {
                                                             [weak self] in
-                                                            self?.view.isUserInteractionEnabled = true
+                                                            self?.stopSelectingImageProcess()
                                                             guard self != nil else {
                                                                 return
                                                             }

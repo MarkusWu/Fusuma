@@ -29,6 +29,7 @@ class ViewController: UIViewController, FusumaDelegate {
         fusumaBaseTintColor = UIColor.black
         fusumaSelectedColor = UIColor.black
         fusumaDeselectColor = UIColor.lightGray
+        fusumaIndicatorColor = UIColor.red
         fusumaShowDoneButtonOnLibraryOnly = true
         fusumaAutoDismiss = true
         
