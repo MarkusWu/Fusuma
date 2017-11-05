@@ -107,7 +107,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bqn-1T-KyI">
-                            <rect key="frame" x="56" y="0.0" width="40" height="40"/>
+                            <rect key="frame" x="48" y="0.0" width="40" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="40" id="3TY-Bz-qd7"/>
                                 <constraint firstAttribute="width" constant="40" id="ubi-fQ-UtL"/>
@@ -163,7 +163,7 @@
                     <constraints>
                         <constraint firstItem="Dx0-Tt-oZs" firstAttribute="centerY" secondItem="8ba-kc-jlJ" secondAttribute="centerY" id="0Eg-AC-JTA"/>
                         <constraint firstItem="5iB-Jh-kTh" firstAttribute="centerY" secondItem="8ba-kc-jlJ" secondAttribute="centerY" id="2az-AA-tGE"/>
-                        <constraint firstItem="bqn-1T-KyI" firstAttribute="leading" secondItem="Dx0-Tt-oZs" secondAttribute="trailing" constant="8" id="50B-mg-af0"/>
+                        <constraint firstItem="bqn-1T-KyI" firstAttribute="leading" secondItem="Dx0-Tt-oZs" secondAttribute="trailing" id="50B-mg-af0"/>
                         <constraint firstItem="Dx0-Tt-oZs" firstAttribute="leading" secondItem="8ba-kc-jlJ" secondAttribute="leading" constant="8" id="51K-wb-k3T"/>
                         <constraint firstItem="cxN-Q8-Lgd" firstAttribute="centerY" secondItem="Dx0-Tt-oZs" secondAttribute="centerY" id="5BY-tJ-KTH"/>
                         <constraint firstAttribute="height" constant="40" id="5ZE-04-Fz1"/>

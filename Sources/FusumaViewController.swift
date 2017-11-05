@@ -211,14 +211,17 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     
     public var photoEditable: Bool = false {
         didSet {
+            
+            guard self.photoEditable != oldValue else {
+                return
+            }
+            
             self.albumView.hidePhotoEditor(!self.photoEditable)
             if self.previewButton != nil {
                 self.previewButton.isHidden = !self.photoEditable
                 
                 if self.photoEditable {
-                    if let image = UIImage(named: "icon_preview", in: Bundle(for: type(of: self)), compatibleWith: nil){
-                        self.previewButton.setImage(image, for: .normal)
-                    }
+                    self.previewButton.tintColor = fusumaBaseTintColor
                 }
             }
         }
@@ -653,14 +656,11 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     @IBAction func previewButtonTapped(_ sender: UIButton) {
         if self.albumView.brightnessSlider.isHidden {
             self.albumView.hideEditOptions(false)
-            if let image = UIImage(named: "icon_preview", in: Bundle(for: type(of: self)), compatibleWith: nil){
-                self.previewButton.setImage(image, for: .normal)
-            }
+            self.previewButton.tintColor = fusumaBaseTintColor
         } else {
             self.albumView.hideEditOptions(true)
-            if let image = UIImage(named: "icon_no_preview", in: Bundle(for: type(of: self)), compatibleWith: nil){
-                self.previewButton.setImage(image, for: .normal)
-            }
+            self.previewButton.tintColor = fusumaBaseTintColor.withAlphaComponent(0.35)
+            
         }
     }
     
@@ -735,8 +735,6 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     
     @IBAction func doneButtonPressed(_ sender: UIButton) {
         
-        self.startSelectingImageProcess()
-        
         let view = albumView.imageCropView
         
         var image:UIImage? = nil
@@ -759,6 +757,9 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
                 })
             }
         } else {
+            
+            self.startSelectingImageProcess()
+            
             let normalizedX = (view?.contentOffset.x)! / (view?.contentSize.width)!
             let normalizedY = (view?.contentOffset.y)! / (view?.contentSize.height)!
             
@@ -899,9 +900,7 @@ extension FusumaViewController: FSAlbumViewDelegate, FSCameraViewDelegate, FSVid
         self.previewButton.isEnabled = !flag
         
         if flag {
-            if let image = UIImage(named: "icon_preview", in: Bundle(for: type(of: self)), compatibleWith: nil){
-                self.previewButton.setImage(image, for: .normal)
-            }
+            self.previewButton.tintColor = fusumaBaseTintColor
             
             self.delegate?.fusumaAddTextDidBegin?()
         } else {

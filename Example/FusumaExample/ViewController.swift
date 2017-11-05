@@ -52,7 +52,7 @@ class ViewController: UIViewController, FusumaDelegate {
         if #available(iOS 11.0, *) {
             fusuma.safeAreaInsets = self.view.safeAreaInsets
         }
-        fusuma.photoEditable = false
+        fusuma.photoEditable = true
         fusuma.statusBarHeight = 0
         fusuma.hasVideo = true
         fusuma.delegate = self
