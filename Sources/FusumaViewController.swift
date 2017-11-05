@@ -798,6 +798,11 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
                                                       contentMode: .aspectFill, options: options) {
                                                         [weak self] result, info in
                                                         
+                                                        guard result != nil else {
+                                                            self?.stopSelectingImageProcess()
+                                                            return
+                                                        }
+                                                        
                                                         guard self != nil else {
                                                             self?.stopSelectingImageProcess()
                                                             return
