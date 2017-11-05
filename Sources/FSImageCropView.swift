@@ -79,6 +79,8 @@ final class FSImageCropView: UIScrollView, UIScrollViewDelegate {
             
             self.imageOverlay.frame = self.imageView.frame
             
+            self.imageCropViewDelegate?.imageCropView(self, didChangeContentFrame: self.imageView.frame)
+            
             self.zoomScale = 1.0
             
         }
