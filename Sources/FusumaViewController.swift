@@ -714,6 +714,9 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     }
     
     @IBAction func doneButtonPressed(_ sender: UIButton) {
+        
+        self.view.isUserInteractionEnabled = false
+        
         let view = albumView.imageCropView
         
         var image:UIImage? = nil
@@ -745,6 +748,17 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
             let cropRect = CGRect(x: normalizedX, y: normalizedY, width: normalizedWidth, height: normalizedHeight)
             
             DispatchQueue.global(qos: .default).async(execute: {
+                [weak self] in
+                
+                guard self != nil else {
+                    self?.view.isUserInteractionEnabled = true
+                    return
+                }
+                
+                guard let phAsset = self?.albumView.phAsset else {
+                    self?.view.isUserInteractionEnabled = true
+                    return
+                }
                 
                 let options = PHImageRequestOptions()
                 options.deliveryMode = .highQualityFormat
@@ -752,38 +766,54 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
                 options.normalizedCropRect = cropRect
                 options.resizeMode = .exact
                 
-                let targetWidth = floor(CGFloat(self.albumView.phAsset.pixelWidth) * cropRect.width)
-                let targetHeight = floor(CGFloat(self.albumView.phAsset.pixelHeight) * cropRect.height)
+                let targetWidth = floor(CGFloat(phAsset.pixelWidth) * cropRect.width)
+                let targetHeight = floor(CGFloat(phAsset.pixelHeight) * cropRect.height)
                 let dimensionW = max(min(targetHeight, targetWidth), 1024 * UIScreen.main.scale)
-                let dimensionH = dimensionW * self.getCropHeightRatio()
+                let dimensionH = dimensionW * self!.getCropHeightRatio()
                 
                 let targetSize = CGSize(width: dimensionW, height: dimensionH)
                 
-                PHImageManager.default().requestImage(for: self.albumView.phAsset, targetSize: targetSize,
+                PHImageManager.default().requestImage(for: phAsset, targetSize: targetSize,
                                                       contentMode: .aspectFill, options: options) {
-                                                        result, info in
+                                                        [weak self] result, info in
+                                                        
+                                                        guard self != nil else {
+                                                            self?.view.isUserInteractionEnabled = true
+                                                            return
+                                                        }
+                                                        
+                                                        guard let phAsset = self?.albumView.phAsset else {
+                                                            self?.view.isUserInteractionEnabled = true
+                                                            return
+                                                        }
                                                         
                                                         DispatchQueue.main.async(execute: {
-                                                            self.delegate?.fusumaImageSelected(result!, source: self.mode)
+                                                            [weak self] in
+                                                            self?.view.isUserInteractionEnabled = true
+                                                            guard self != nil else {
+                                                                return
+                                                            }
+                                                            
+                                                            self!.delegate?.fusumaImageSelected(result!, source: self!.mode)
                                                             
                                                             if fusumaAutoDismiss {
-                                                                self.dismiss(animated: self.animatedOnDismiss, completion: {
-                                                                    self.delegate?.fusumaDismissedWithImage(result!, source: self.mode)
+                                                                self!.dismiss(animated: self!.animatedOnDismiss, completion: {
+                                                                    self!.delegate?.fusumaDismissedWithImage(result!, source: self!.mode)
                                                                 })
                                                             }
                                                             
                                                             let metaData = ImageMetadata(
-                                                                mediaType: self.albumView.phAsset.mediaType,
-                                                                pixelWidth: self.albumView.phAsset.pixelWidth,
-                                                                pixelHeight: self.albumView.phAsset.pixelHeight,
-                                                                creationDate: self.albumView.phAsset.creationDate,
-                                                                modificationDate: self.albumView.phAsset.modificationDate,
-                                                                location: self.albumView.phAsset.location,
-                                                                duration: self.albumView.phAsset.duration,
-                                                                isFavourite: self.albumView.phAsset.isFavorite,
-                                                                isHidden: self.albumView.phAsset.isHidden)
+                                                                mediaType: phAsset.mediaType,
+                                                                pixelWidth: phAsset.pixelWidth,
+                                                                pixelHeight: phAsset.pixelHeight,
+                                                                creationDate: phAsset.creationDate,
+                                                                modificationDate: phAsset.modificationDate,
+                                                                location: phAsset.location,
+                                                                duration: phAsset.duration,
+                                                                isFavourite: phAsset.isFavorite,
+                                                                isHidden: phAsset.isHidden)
                                                             
-                                                            self.delegate?.fusumaImageSelected(result!, source: self.mode, metaData: metaData)
+                                                            self!.delegate?.fusumaImageSelected(result!, source: self!.mode, metaData: metaData)
                                                             
                                                         })
                 }

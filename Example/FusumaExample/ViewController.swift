@@ -30,6 +30,7 @@ class ViewController: UIViewController, FusumaDelegate {
         fusumaSelectedColor = UIColor.black
         fusumaDeselectColor = UIColor.lightGray
         fusumaShowDoneButtonOnLibraryOnly = true
+        fusumaAutoDismiss = true
         
         fusumaTextColors = Array(repeating: UIColor.magenta, count: 10)
     }
