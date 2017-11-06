@@ -339,7 +339,10 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         
         menuView.backgroundColor = fusumaBackgroundColor
         self.statusBarView.backgroundColor = fusumaBackgroundColor
-        menuView.addBottomBorder(UIColor.lightGray, width: 0.5)
+        
+        let deviceWidth = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+        
+        menuView.addBottomBorder(UIColor.lightGray, width: deviceWidth, height: 0.5)
         
         let bundle = Bundle(for: self.classForCoder)
         
@@ -1049,7 +1052,15 @@ private extension FusumaViewController {
         
         button.tintColor = fusumaSelectedColor
         
-        button.addBottomBorder(fusumaSelectedColor, width: 3)
+        let deviceWidth = min(UIScreen.main.bounds.width, UIScreen.main.bounds.height)
+        
+        var width = deviceWidth / CGFloat(2)
+        
+        if hasVideo {
+            width = deviceWidth / CGFloat(3)
+        }
+        
+        button.addBottomBorder(fusumaSelectedColor, width: width, height: 3)
     }
 }
 
