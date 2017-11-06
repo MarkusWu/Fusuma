@@ -41,7 +41,15 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
     
     static func instance() -> FSCameraView {
         
-        return UINib(nibName: "FSCameraView", bundle: Bundle(for: self.classForCoder())).instantiate(withOwner: self, options: nil)[0] as! FSCameraView
+        let v =  UINib(nibName: "FSCameraView", bundle: Bundle(for: self.classForCoder())).instantiate(withOwner: self, options: nil)[0] as! FSCameraView
+        
+        if fusumaCameraZoomInEnabled {
+            let pinchOnPreview = UIPinchGestureRecognizer(target: v, action: #selector(FSCameraView.previewContainerPinched(_:)))
+            v.previewViewContainer.isUserInteractionEnabled = true
+            v.previewViewContainer.addGestureRecognizer(pinchOnPreview)
+        }
+        
+        return v
     }
     
     func initialize() {
@@ -464,5 +472,30 @@ extension FSCameraView {
         }
 
         return false
+    }
+    
+    // MARK: - Observers
+    
+    @objc func previewContainerPinched(_ gr: UIPinchGestureRecognizer) {
+        
+        if gr.state == .changed {
+            
+            guard let videoDevice = self.device else {
+                return
+            }
+            
+            let offset: CGFloat = (0.5 - fusumaCameraZoomVelocityFactor) * 2 * 25
+            
+            let pinchVelocityDividerFactor: CGFloat = 30 + offset
+            
+            do {
+                try videoDevice.lockForConfiguration()
+                let desiredZoomFactor = videoDevice.videoZoomFactor + atan2(gr.velocity, pinchVelocityDividerFactor)
+                
+                videoDevice.videoZoomFactor = max(1.0, min(desiredZoomFactor, videoDevice.activeFormat.videoMaxZoomFactor));
+            } catch {
+            
+            }
+        }
     }
 }

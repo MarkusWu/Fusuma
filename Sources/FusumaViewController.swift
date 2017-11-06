@@ -65,6 +65,13 @@ public var fusumaDeselectColor = UIColor.hex("#FFFFFF", alpha: 1.0)
 
 public var fusumaIndicatorColor = UIColor.gray
 
+public var fusumaCameraZoomInEnabled = false
+/**
+ A divider factor for camera zoom. The greater the value is, the faster the zoom gets. By default, it's 0.5.
+ - note: value can only be in [0.0, 1.0]. Any value outside of this range will be adjusted to the closest boundary.
+ */
+public var fusumaCameraZoomVelocityFactor: CGFloat = 0.5
+
 public var fusumaTextColors: [UIColor] = []
 
 public var fusumaLongPressPhotoLibCellEnabled = false
