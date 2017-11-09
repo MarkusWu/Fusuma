@@ -961,6 +961,17 @@ private extension FusumaViewController {
         
         self.mode = mode
         
+        switch mode {
+        case .library:
+            if self.photoEditable {
+                self.previewButton.isHidden = false
+            }
+        default:
+            if self.photoEditable {
+                self.previewButton.isHidden = true
+            }
+        }
+        
         self.expandArrowButton.isHidden = self.mode != .library
         
         dishighlightButtons()
