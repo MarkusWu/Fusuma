@@ -739,7 +739,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     private func stopSelectingImageProcess() {
         self.view.isUserInteractionEnabled = true
         self.doneButtonIndicator.stopAnimating()
-        
+
         UIView.animate(withDuration: 0.3, animations: {
             [weak self] in
             self?.doneButton.alpha = 1.0
@@ -749,6 +749,11 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     @IBAction func doneButtonPressed(_ sender: UIButton) {
         
         let view = albumView.imageCropView
+        
+        if view == nil {
+            print("albumView.imageCropView is nil, ....")
+            return
+        }
         
         var image:UIImage? = nil
         
@@ -770,6 +775,11 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
                 })
             }
         } else {
+            
+            if view!.contentSize.width == 0 || view!.contentSize.height == 0 {
+                print("invalid contenSize, either width or height is zero...")
+                return
+            }
             
             self.startSelectingImageProcess()
             

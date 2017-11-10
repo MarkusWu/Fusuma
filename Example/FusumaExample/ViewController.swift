@@ -32,7 +32,7 @@ class ViewController: UIViewController, FusumaDelegate {
         fusumaIndicatorColor = UIColor.red
         fusumaShowDoneButtonOnLibraryOnly = true
         fusumaCameraZoomInEnabled = true
-        fusumaAutoDismiss = true
+        fusumaAutoDismiss = false
         
         fusumaTextColors = Array(repeating: UIColor.magenta, count: 10)
     }
@@ -46,14 +46,13 @@ class ViewController: UIViewController, FusumaDelegate {
         // Show Fusuma
         
         let fusuma = FusumaViewController.shared
-        fusuma.photoEditable = true
         fusuma.initialSelectedColorIndex = 3
         
         //        fusumaCropImage = false
         if #available(iOS 11.0, *) {
             fusuma.safeAreaInsets = self.view.safeAreaInsets
         }
-        fusuma.photoEditable = true
+        fusuma.photoEditable = false
         fusuma.statusBarHeight = 0
         fusuma.hasVideo = true
         fusuma.delegate = self
