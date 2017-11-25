@@ -458,7 +458,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
                 )
             )
             
-            self.view.layoutIfNeeded()
+            //self.view.layoutIfNeeded()
         }
         
         if fusumaCropImage {
