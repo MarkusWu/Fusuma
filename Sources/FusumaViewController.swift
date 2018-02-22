@@ -141,6 +141,12 @@ public var fusumaTintIcons : Bool = true
     case video
 }
 
+@objc public enum FusumaPhotoCamOption: Int {
+    case all
+    case noVideo
+    case libraryOnly
+}
+
 public struct ImageMetadata {
     public let mediaType: PHAssetMediaType
     public let pixelWidth: Int
@@ -239,7 +245,11 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     
     public var animatedOnDismiss = true
     
-    public var hasVideo = false
+    public var photoCamOption: FusumaPhotoCamOption = .noVideo
+    
+    var hasVideo: Bool {
+        return self.photoCamOption == .all
+    }// = false
     public var cropHeightRatio: CGFloat = 1
     
     var mode: FusumaMode!
@@ -265,6 +275,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     @IBOutlet weak var libraryButton: UIButton!
     @IBOutlet weak var libraryButtonBottomConstr: NSLayoutConstraint!
     @IBOutlet weak var cameraButton: UIButton!
+    @IBOutlet weak var cameraButtonHeightConstr: NSLayoutConstraint!
     @IBOutlet weak var videoButton: UIButton!
     @IBOutlet weak var doneButton: UIButton!
     @IBOutlet weak var doneButtonIndicator: UIActivityIndicatorView!
@@ -311,6 +322,12 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     
     override public func viewDidLoad() {
         super.viewDidLoad()
+        
+        if self.photoCamOption == .libraryOnly {
+            self.cameraButtonHeightConstr.constant = 0
+        } else {
+            self.cameraButtonHeightConstr.constant = 45
+        }
         
         var topOffset: CGFloat = 0
         
@@ -541,7 +558,10 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         cameraView.layoutIfNeeded()
         
         albumView.initialize()
-        cameraView.initialize()
+        
+        if self.photoCamOption != .libraryOnly {
+            cameraView.initialize()
+        }
         
         if hasVideo {
             
