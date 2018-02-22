@@ -249,7 +249,12 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     
     var hasVideo: Bool {
         return self.photoCamOption == .all
-    }// = false
+    }
+    
+    var hasCamera: Bool {
+        return self.photoCamOption != .libraryOnly
+    }
+    
     public var cropHeightRatio: CGFloat = 1
     
     var mode: FusumaMode!
@@ -559,7 +564,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         
         albumView.initialize()
         
-        if self.photoCamOption != .libraryOnly {
+        if self.hasCamera {
             cameraView.initialize()
         }
         
@@ -971,7 +976,9 @@ private extension FusumaViewController {
             self.videoView.stopCamera()
         }
         
-        self.cameraView.stopCamera()
+        if self.hasCamera {
+            self.cameraView.stopCamera()
+        }
     }
     
     func changeMode(_ mode: FusumaMode) {
