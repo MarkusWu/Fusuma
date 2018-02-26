@@ -32,7 +32,7 @@ class ViewController: UIViewController, FusumaDelegate {
         fusumaIndicatorColor = UIColor.red
         fusumaShowDoneButtonOnLibraryOnly = true
         fusumaCameraZoomInEnabled = true
-        fusumaPrefersStatusBarHidden = false
+        fusumaPrefersStatusBarHidden = true
         fusumaAutoDismiss = true
         
         fusumaTextColors = Array(repeating: UIColor.magenta, count: 10)
@@ -50,6 +50,7 @@ class ViewController: UIViewController, FusumaDelegate {
         fusuma.initialSelectedColorIndex = 3
         
         //        fusumaCropImage = false
+        
         if #available(iOS 11.0, *) {
             fusuma.safeAreaInsets = self.view.safeAreaInsets
         }
