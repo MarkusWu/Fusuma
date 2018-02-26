@@ -32,6 +32,7 @@ class ViewController: UIViewController, FusumaDelegate {
         fusumaIndicatorColor = UIColor.red
         fusumaShowDoneButtonOnLibraryOnly = true
         fusumaCameraZoomInEnabled = true
+        fusumaPrefersStatusBarHidden = false
         fusumaAutoDismiss = true
         
         fusumaTextColors = Array(repeating: UIColor.magenta, count: 10)
