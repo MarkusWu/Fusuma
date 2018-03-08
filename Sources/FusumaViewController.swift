@@ -227,6 +227,8 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         return self.instance != nil
     }
     
+    public var saveAsScreenshoot = false
+    
     public var photoEditable: Bool = true {
         didSet {
             
@@ -783,7 +785,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         
         var image:UIImage? = nil
         
-        if self.photoEditable {
+        if self.photoEditable || self.saveAsScreenshoot {
             self.albumView.imageCropView.backgroundColor = UIColor.white
             image = self.albumView.convertEditImage()
             self.albumView.imageCropView.backgroundColor = fusumaBackgroundColor

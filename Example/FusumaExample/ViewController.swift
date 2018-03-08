@@ -55,6 +55,7 @@ class ViewController: UIViewController, FusumaDelegate {
             fusuma.safeAreaInsets = self.view.safeAreaInsets
         }
         fusuma.photoEditable = false
+        fusuma.saveAsScreenshoot = true
         fusuma.statusBarHeight = 0
         fusuma.photoCamOption = .libraryOnly
         fusuma.delegate = self
