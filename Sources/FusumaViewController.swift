@@ -71,6 +71,9 @@ public var fusumaIndicatorColor = UIColor.gray
 public var fusumaCameraZoomInEnabled = false
 
 public var fusumaPrefersStatusBarHidden = true
+
+public var fusumaCropMaxZoomScale: CGFloat = 2.0
+public var fusumaCropMinZoomScale: CGFloat = 0.5
 /**
  A divider factor for camera zoom. The greater the value is, the faster the zoom gets. By default, it's 0.5.
  - note: value can only be in [0.0, 1.0]. Any value outside of this range will be adjusted to the closest boundary.
