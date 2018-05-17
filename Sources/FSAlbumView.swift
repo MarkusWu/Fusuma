@@ -117,10 +117,14 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
                 
                 if let pos = self.textViewOrigin {
                     
-                    UIView.animate(withDuration: 0.3, animations: {
-                        finished in
+//                    UIView.animate(withDuration: 0.3, animations: {
+//                        finished in
+//                        self.textView.frame.origin = pos
+//                    })
+                    
+                    UIView.animate(withDuration: 0.3, animations: {}) { (finished) in
                         self.textView.frame.origin = pos
-                    })
+                    }
                 } else {
                     self.textView.frame.origin = origin
                 }
@@ -359,7 +363,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         return true
     }
     
-    func doubleTappedImageCropContainer(_ gr: UITapGestureRecognizer) {
+    @objc func doubleTappedImageCropContainer(_ gr: UITapGestureRecognizer) {
         if gr.state == .ended {
             if let asset = self.phAsset {
                 self.changeImage(asset)
@@ -367,7 +371,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         }
     }
     
-    func panned(_ sender: UITapGestureRecognizer) {
+    @objc func panned(_ sender: UITapGestureRecognizer) {
         
         if sender.state == UIGestureRecognizerState.began {
             
@@ -564,7 +568,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         self.updateTextViewLayoutIfNeeded()
     }
     
-    func textViewPanned(_ gr: UIPanGestureRecognizer) {
+    @objc func textViewPanned(_ gr: UIPanGestureRecognizer) {
         let translation = gr.translation(in: self.imageCropViewContainer)
         
         if gr.state == .began {
@@ -596,7 +600,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         self.textView.becomeFirstResponder()
     }
     
-    func imageCropContainerTapped(_ gr: UITapGestureRecognizer) {
+    @objc func imageCropContainerTapped(_ gr: UITapGestureRecognizer) {
         if gr.state == .ended {
             if self.addingText {
                 self.textView.resignFirstResponder()

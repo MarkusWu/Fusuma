@@ -202,7 +202,7 @@ class ColorSelectorView: UIView, UIScrollViewDelegate {
     
     // MARK: - User interactions
     
-    func selectedColorButtonLongPressed(_ gr: UILongPressGestureRecognizer) {
+    @objc func selectedColorButtonLongPressed(_ gr: UILongPressGestureRecognizer) {
         guard let button = gr.view as? RoundedButton else {
             return
         }
@@ -217,7 +217,7 @@ class ColorSelectorView: UIView, UIScrollViewDelegate {
         self.delegate?.colorSelectorView(self, didLongPressSelectedColor: gr)
     }
     
-    func colorButtonTapped(_ sender: RoundedButton) {
+    @objc func colorButtonTapped(_ sender: RoundedButton) {
         
         if self.selectedColorButton !== sender {
             self.selectedColorButton = sender

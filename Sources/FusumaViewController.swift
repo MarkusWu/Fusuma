@@ -607,7 +607,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     
     // MARK: - Observers:
     
-    func keyboardWillShow(_ notification: Notification) {
+    @objc func keyboardWillShow(_ notification: Notification) {
         guard self.isViewLoaded && self.view.window != nil else {
             return
         }
@@ -635,7 +635,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
             completion: nil)
     }
     
-    func keyboardWillHide(_ notification: Notification) {
+    @objc func keyboardWillHide(_ notification: Notification) {
         guard self.isViewLoaded && self.view.window != nil else {
             return
         }
@@ -670,7 +670,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     
     // MARK: - User interactions
     
-    func photoLibContainerLongPressed(_ gr: UILongPressGestureRecognizer) {
+    @objc func photoLibContainerLongPressed(_ gr: UILongPressGestureRecognizer) {
         if gr.state == .began {
             let p = gr.location(in: self.albumView.collectionView)
             
@@ -905,7 +905,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         self.accessPhotosLib()
     }
     
-    func titleLabelTapped(_ gr: UITapGestureRecognizer) {
+    @objc func titleLabelTapped(_ gr: UITapGestureRecognizer) {
         
         if gr.state == .ended && self.mode == .library {
             self.accessPhotosLib()
