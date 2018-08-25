@@ -54,7 +54,7 @@ class ViewController: UIViewController, FusumaDelegate {
         if #available(iOS 11.0, *) {
             fusuma.safeAreaInsets = self.view.safeAreaInsets
         }
-        fusuma.photoEditable = false
+        fusuma.photoEditable = true
         fusuma.saveAsScreenshoot = true
         fusuma.statusBarHeight = 0
         fusuma.photoCamOption = .noVideo
@@ -126,7 +126,7 @@ class ViewController: UIViewController, FusumaDelegate {
             
         }))
         
-        self.present(alert, animated: true, completion: nil)
+        FusumaViewController.shared.present(alert, animated: true, completion: nil)
     }
     
     func fusumaWillPresentPhotosLib(_ fusumaVC: FusumaViewController) {

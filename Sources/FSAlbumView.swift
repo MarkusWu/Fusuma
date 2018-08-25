@@ -833,6 +833,8 @@ extension FSAlbumView {
     // Check the status of authorization for PHPhotoLibrary
     func checkPhotoAuth() {
         
+        let undertermined = PHPhotoLibrary.authorizationStatus() == .notDetermined
+        
         PHPhotoLibrary.requestAuthorization { (status) -> Void in
             switch status {
             case .authorized:
@@ -848,9 +850,9 @@ extension FSAlbumView {
                 
             case .restricted, .denied:
                 DispatchQueue.main.async(execute: { () -> Void in
-                    
-                    self.delegate?.albumViewCameraRollUnauthorized()
-                    
+                    if !undertermined {
+                        self.delegate?.albumViewCameraRollUnauthorized()
+                    }
                 })
             default:
                 break

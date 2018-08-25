@@ -235,13 +235,11 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     public var photoEditable: Bool = true {
         didSet {
             
-            guard self.photoEditable != oldValue else {
-                return
-            }
+            let editable = self.photoEditable && self.hasGalleryPermission
             
-            self.albumView.hidePhotoEditor(!self.photoEditable)
+            self.albumView.hidePhotoEditor(!editable)
             if self.previewButton != nil {
-                self.previewButton.isHidden = !self.photoEditable
+                self.previewButton.isHidden = !editable
                 
                 if self.photoEditable {
                     self.previewButton.tintColor = fusumaBaseTintColor
@@ -364,7 +362,12 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         
         nc.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: .UIKeyboardWillHide, object: nil)
         
-        self.previewButton.isHidden = !self.photoEditable
+        if self.hasGalleryPermission {
+            self.previewButton.isHidden = !self.photoEditable
+        } else {
+            let flag = self.photoEditable
+            self.photoEditable = flag
+        }
         
         self.view.backgroundColor = fusumaBackgroundColor
         
@@ -935,6 +938,7 @@ extension FusumaViewController: FSAlbumViewDelegate, FSCameraViewDelegate, FSVid
         // in the case that we're just coming back from granting photo gallery permissions
         // ensure the done button is visible if it should be
         self.updateDoneButtonVisibility()
+        self.updatePreviewButtonVisibility()
     }
     
     // MARK: - FSAlbumViewDelegate
@@ -1009,7 +1013,7 @@ private extension FusumaViewController {
         
         switch mode {
         case .library:
-            if self.photoEditable {
+            if self.photoEditable && self.hasGalleryPermission {
                 self.previewButton.isHidden = false
             }
         default:
@@ -1061,6 +1065,24 @@ private extension FusumaViewController {
                 self.doneButton.isHidden = false
             default:
                 self.doneButton.isHidden = true
+            }
+        }
+    }
+    
+    func updatePreviewButtonVisibility() {
+        if !hasGalleryPermission {
+            let flag = self.photoEditable
+            self.photoEditable = flag
+            return
+        }
+        
+        switch mode {
+        case .library:
+            let flag = self.photoEditable
+            self.photoEditable = flag
+        default:
+            if self.photoEditable {
+                self.previewButton.isHidden = true
             }
         }
     }
