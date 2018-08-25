@@ -57,7 +57,7 @@ class ViewController: UIViewController, FusumaDelegate {
         fusuma.photoEditable = false
         fusuma.saveAsScreenshoot = true
         fusuma.statusBarHeight = 0
-        fusuma.photoCamOption = .libraryOnly
+        fusuma.photoCamOption = .noVideo
         fusuma.delegate = self
         fusuma.cropHeightRatio = 1.0
         fusumaSavesImage = true

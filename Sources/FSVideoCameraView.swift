@@ -64,6 +64,10 @@ final class FSVideoCameraView: UIView {
             }
         }
         
+        if device == nil {
+            return
+        }
+        
         do {
             
             if let session = session {

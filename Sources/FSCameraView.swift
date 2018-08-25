@@ -101,6 +101,10 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
             }
         }
         
+        if device == nil {
+            return
+        }
+        
         do {
 
             if let session = session {
