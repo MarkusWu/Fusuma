@@ -90,7 +90,7 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
         
         for device in AVCaptureDevice.devices() {
             
-            if let device = device as? AVCaptureDevice , device.position == AVCaptureDevice.Position.back {
+            if device.position == AVCaptureDevice.Position.back {
                 
                 self.device = device
                 
@@ -309,7 +309,7 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
 
                 for device in AVCaptureDevice.devices(for: AVMediaType.video) {
 
-                    if let device = device as? AVCaptureDevice , device.position == position {
+                    if device.position == position {
                  
                         videoInput = try AVCaptureDeviceInput(device: device)
                         session.addInput(videoInput!)
