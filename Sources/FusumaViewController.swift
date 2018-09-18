@@ -262,7 +262,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
     
     public var cropHeightRatio: CGFloat = 1
     
-    var mode: FusumaMode!
+    var mode: FusumaMode = .library
     public var modeOrder: FusumaModeOrder = .libraryFirst
     var willFilter = true
     
@@ -454,7 +454,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         libraryButton.clipsToBounds = true
         videoButton.clipsToBounds = true
         
-        changeMode(fusumaStartingMode)
+        changeMode(fusumaStartingMode, noOptOnSameMode: false)
         
         self.preferredModeOnWillAppear = fusumaStartingMode
         
@@ -534,18 +534,15 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         
         // high light button again for better UI
         if neverUpdateHighlightButtonOnViewAppear {
-            if self.mode != nil {
-                
-                self.neverUpdateHighlightButtonOnViewAppear = false
-                
-                switch self.mode! {
-                case .library:
-                    highlightButton(libraryButton)
-                case .camera:
-                    highlightButton(cameraButton)
-                case .video:
-                    highlightButton(videoButton)
-                }
+            self.neverUpdateHighlightButtonOnViewAppear = false
+            
+            switch self.mode {
+            case .library:
+                highlightButton(libraryButton)
+            case .camera:
+                highlightButton(cameraButton)
+            case .video:
+                highlightButton(videoButton)
             }
         }
     }
@@ -991,22 +988,20 @@ private extension FusumaViewController {
         }
     }
     
-    func changeMode(_ mode: FusumaMode) {
+    func changeMode(_ mode: FusumaMode, noOptOnSameMode: Bool = true) {
         
-        if self.mode == mode {
+        if self.mode == mode && noOptOnSameMode {
             return
         }
         
-        if self.mode != nil {
-            //operate this switch before changing mode to stop cameras
-            switch self.mode! {
-            case .library:
-                break
-            case .camera:
-                self.cameraView.stopCamera()
-            case .video:
-                self.videoView.stopCamera()
-            }
+        //operate this switch before changing mode to stop cameras
+        switch self.mode {
+        case .library:
+            break
+        case .camera:
+            self.cameraView.stopCamera()
+        case .video:
+            self.videoView.stopCamera()
         }
         
         self.mode = mode
@@ -1059,13 +1054,11 @@ private extension FusumaViewController {
             return
         }
         
-        if let mode = self.mode {
-            switch mode {
-            case .library:
-                self.doneButton.isHidden = false
-            default:
-                self.doneButton.isHidden = true
-            }
+        switch mode {
+        case .library:
+            self.doneButton.isHidden = false
+        default:
+            self.doneButton.isHidden = true
         }
     }
     
