@@ -358,9 +358,9 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         
         let nc = NotificationCenter.default
         
-        nc.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: .UIKeyboardWillShow, object: nil)
+        nc.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         
-        nc.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: .UIKeyboardWillHide, object: nil)
+        nc.addObserver(self, selector: #selector(self.keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         if self.hasGalleryPermission {
             self.previewButton.isHidden = !self.photoEditable
@@ -400,54 +400,54 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         
         if fusumaTintIcons {
             
-            libraryButton.setImage(albumImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
+            libraryButton.setImage(albumImage?.withRenderingMode(.alwaysTemplate), for: UIControl.State())
             libraryButton.setImage(albumImage?.withRenderingMode(.alwaysTemplate), for: .highlighted)
             libraryButton.setImage(albumImage?.withRenderingMode(.alwaysTemplate), for: .selected)
             libraryButton.tintColor = fusumaSelectedColor
             libraryButton.adjustsImageWhenHighlighted = false
             
-            cameraButton.setImage(cameraImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
+            cameraButton.setImage(cameraImage?.withRenderingMode(.alwaysTemplate), for: UIControl.State())
             cameraButton.setImage(cameraImage?.withRenderingMode(.alwaysTemplate), for: .highlighted)
             cameraButton.setImage(cameraImage?.withRenderingMode(.alwaysTemplate), for: .selected)
             cameraButton.tintColor  = fusumaSelectedColor
             cameraButton.adjustsImageWhenHighlighted  = false
             
-            closeButton.setImage(closeImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
+            closeButton.setImage(closeImage?.withRenderingMode(.alwaysTemplate), for: UIControl.State())
             closeButton.setImage(closeImage?.withRenderingMode(.alwaysTemplate), for: .highlighted)
             closeButton.setImage(closeImage?.withRenderingMode(.alwaysTemplate), for: .selected)
             closeButton.tintColor = fusumaBaseTintColor
             self.previewButton.tintColor = fusumaBaseTintColor
             self.expandArrowButton.tintColor = fusumaBaseTintColor
             
-            videoButton.setImage(videoImage, for: UIControlState())
+            videoButton.setImage(videoImage, for: UIControl.State())
             videoButton.setImage(videoImage, for: .highlighted)
             videoButton.setImage(videoImage, for: .selected)
             videoButton.tintColor  = fusumaSelectedColor
             videoButton.adjustsImageWhenHighlighted = false
             
-            doneButton.setImage(checkImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
+            doneButton.setImage(checkImage?.withRenderingMode(.alwaysTemplate), for: UIControl.State())
             doneButton.tintColor = fusumaBaseTintColor
             self.doneButtonIndicator.color = fusumaIndicatorColor
             
         } else {
             
-            libraryButton.setImage(albumImage, for: UIControlState())
+            libraryButton.setImage(albumImage, for: UIControl.State())
             libraryButton.setImage(albumImage, for: .highlighted)
             libraryButton.setImage(albumImage, for: .selected)
             libraryButton.tintColor = nil
             
-            cameraButton.setImage(cameraImage, for: UIControlState())
+            cameraButton.setImage(cameraImage, for: UIControl.State())
             cameraButton.setImage(cameraImage, for: .highlighted)
             cameraButton.setImage(cameraImage, for: .selected)
             cameraButton.tintColor = nil
             
-            videoButton.setImage(videoImage, for: UIControlState())
+            videoButton.setImage(videoImage, for: UIControl.State())
             videoButton.setImage(videoImage, for: .highlighted)
             videoButton.setImage(videoImage, for: .selected)
             videoButton.tintColor = nil
             
-            closeButton.setImage(closeImage, for: UIControlState())
-            doneButton.setImage(checkImage, for: UIControlState())
+            closeButton.setImage(closeImage, for: UIControl.State())
+            doneButton.setImage(checkImage, for: UIControl.State())
         }
         
         cameraButton.clipsToBounds  = true
@@ -495,7 +495,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         
         if fusumaCropImage {
             let heightRatio = getCropHeightRatio()
-            cameraView.croppedAspectRatioConstraint = NSLayoutConstraint(item: cameraView.previewViewContainer, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: cameraView.previewViewContainer, attribute: NSLayoutAttribute.width, multiplier: heightRatio, constant: 0)
+            cameraView.croppedAspectRatioConstraint = NSLayoutConstraint(item: cameraView.previewViewContainer, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: cameraView.previewViewContainer, attribute: NSLayoutConstraint.Attribute.width, multiplier: heightRatio, constant: 0)
             
             cameraView.fullAspectRatioConstraint.isActive = false
             cameraView.croppedAspectRatioConstraint?.isActive = true
@@ -612,7 +612,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
             return
         }
         
-        guard let keyboardRect = ((notification as NSNotification).userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+        guard let keyboardRect = ((notification as NSNotification).userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
             return
         }
         
@@ -688,7 +688,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
                         
                         self.floatingDoneButtonContainer.center = p
                         
-                        self.photoLibraryViewerContainer.bringSubview(toFront: self.floatingDoneButtonContainer)
+                        self.photoLibraryViewerContainer.bringSubviewToFront(self.floatingDoneButtonContainer)
                         UIUtil.hide(false, view: self.floatingDoneButtonContainer)
                     }
                 }
@@ -1027,23 +1027,23 @@ private extension FusumaViewController {
             titleLabel.text = NSLocalizedString(fusumaCameraRollTitle, comment: fusumaCameraRollTitle)
             
             highlightButton(libraryButton)
-            self.view.bringSubview(toFront: photoLibraryViewerContainer)
+            self.view.bringSubviewToFront(photoLibraryViewerContainer)
         case .camera:
             titleLabel.text = NSLocalizedString(fusumaCameraTitle, comment: fusumaCameraTitle)
             
             highlightButton(cameraButton)
-            self.view.bringSubview(toFront: cameraShotContainer)
+            self.view.bringSubviewToFront(cameraShotContainer)
             cameraView.startCamera()
         case .video:
             titleLabel.text = fusumaVideoTitle
             
             highlightButton(videoButton)
-            self.view.bringSubview(toFront: videoShotContainer)
+            self.view.bringSubviewToFront(videoShotContainer)
             videoView.startCamera()
         }
         doneButton.isHidden = !hasGalleryPermission
-        self.view.bringSubview(toFront: menuView)
-        self.view.bringSubview(toFront: self.statusBarView)
+        self.view.bringSubviewToFront(menuView)
+        self.view.bringSubviewToFront(self.statusBarView)
     }
     
     
@@ -1180,11 +1180,10 @@ extension FusumaViewController: UIImagePickerControllerDelegate, UINavigationCon
         self.present(imagePicker, animated: true, completion: nil)
     }
     
-    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         self.shouldRepositionImageCropContainerOnViewDisapper = true
         
-        if let assertURL = info[UIImagePickerControllerReferenceURL] as? URL {
+        if let assertURL = info[UIImagePickerController.InfoKey.referenceURL] as? URL {
             let fetchResult = PHAsset.fetchAssets(withALAssetURLs: [assertURL], options: nil)
             if let asset = fetchResult.firstObject {
                 self.albumView.changeImage(asset)

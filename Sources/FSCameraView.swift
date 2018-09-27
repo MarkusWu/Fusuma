@@ -73,13 +73,13 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
             flipButton.tintColor  = fusumaBaseTintColor
             shotButton.tintColor  = fusumaBaseTintColor
             
-            flashButton.setImage(flashOffImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
-            flipButton.setImage(flipImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
-            shotButton.setImage(shotImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
+            flashButton.setImage(flashOffImage?.withRenderingMode(.alwaysTemplate), for: UIControl.State())
+            flipButton.setImage(flipImage?.withRenderingMode(.alwaysTemplate), for: UIControl.State())
+            shotButton.setImage(shotImage?.withRenderingMode(.alwaysTemplate), for: UIControl.State())
         } else {
-            flashButton.setImage(flashOffImage, for: UIControlState())
-            flipButton.setImage(flipImage, for: UIControlState())
-            shotButton.setImage(shotImage, for: UIControlState())
+            flashButton.setImage(flashOffImage, for: UIControl.State())
+            flipButton.setImage(flipImage, for: UIControl.State())
+            shotButton.setImage(shotImage, for: UIControl.State())
         }
 
         
@@ -142,7 +142,7 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
         
         self.startCamera()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(FSCameraView.willEnterForegroundNotification(_:)), name: NSNotification.Name.UIApplicationWillEnterForeground, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(FSCameraView.willEnterForegroundNotification(_:)), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     
     @objc func willEnterForegroundNotification(_ notification: Notification) {
@@ -354,18 +354,18 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
                     
                     device.flashMode = AVCaptureDevice.FlashMode.on
                     if fusumaTintIcons {
-                        flashButton.setImage(flashOnImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
+                        flashButton.setImage(flashOnImage?.withRenderingMode(.alwaysTemplate), for: UIControl.State())
                     } else {
-                        flashButton.setImage(flashOnImage, for: UIControlState())
+                        flashButton.setImage(flashOnImage, for: UIControl.State())
                     }
                     
                 } else if mode == AVCaptureDevice.FlashMode.on {
                     
                     device.flashMode = AVCaptureDevice.FlashMode.off
                     if fusumaTintIcons {
-                        flashButton.setImage(flashOffImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
+                        flashButton.setImage(flashOffImage?.withRenderingMode(.alwaysTemplate), for: UIControl.State())
                     } else {
-                        flashButton.setImage(flashOffImage, for: UIControlState())
+                        flashButton.setImage(flashOffImage, for: UIControl.State())
                     }
                     
                 }
@@ -377,9 +377,9 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
         } catch _ {
 
             if fusumaTintIcons {
-                flashButton.setImage(flashOffImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
+                flashButton.setImage(flashOffImage?.withRenderingMode(.alwaysTemplate), for: UIControl.State())
             } else {
-                flashButton.setImage(flashOffImage, for: UIControlState())
+                flashButton.setImage(flashOffImage, for: UIControl.State())
             }
             return
         }
@@ -429,7 +429,7 @@ extension FSCameraView {
         self.addSubview(self.focusView!)
         
         UIView.animate(withDuration: 0.8, delay: 0.0, usingSpringWithDamping: 0.8,
-            initialSpringVelocity: 3.0, options: UIViewAnimationOptions.curveEaseIn, // UIViewAnimationOptions.BeginFromCurrentState
+            initialSpringVelocity: 3.0, options: UIView.AnimationOptions.curveEaseIn, // UIViewAnimationOptions.BeginFromCurrentState
             animations: {
                 self.focusView!.alpha = 1.0
                 self.focusView!.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
@@ -451,9 +451,9 @@ extension FSCameraView {
                 
                 device.flashMode = AVCaptureDevice.FlashMode.off
                 if fusumaTintIcons {
-                    flashButton.setImage(flashOffImage?.withRenderingMode(.alwaysTemplate), for: UIControlState())
+                    flashButton.setImage(flashOffImage?.withRenderingMode(.alwaysTemplate), for: UIControl.State())
                 } else {
-                    flashButton.setImage(flashOffImage, for: UIControlState())
+                    flashButton.setImage(flashOffImage, for: UIControl.State())
                 }
                 
                 device.unlockForConfiguration()

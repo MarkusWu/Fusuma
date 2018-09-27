@@ -173,7 +173,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
         // Set Image Crop Ratio
         if let heightRatio = delegate?.getCropHeightRatio() {
-            imageCropViewContainer.addConstraint(NSLayoutConstraint(item: imageCropViewContainer, attribute: NSLayoutAttribute.height, relatedBy: NSLayoutRelation.equal, toItem: imageCropViewContainer, attribute: NSLayoutAttribute.width, multiplier: heightRatio, constant: 0)
+            imageCropViewContainer.addConstraint(NSLayoutConstraint(item: imageCropViewContainer, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: imageCropViewContainer, attribute: NSLayoutConstraint.Attribute.width, multiplier: heightRatio, constant: 0)
             )
             layoutSubviews()
         }
@@ -373,7 +373,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     
     @objc func panned(_ sender: UITapGestureRecognizer) {
         
-        if sender.state == UIGestureRecognizerState.began {
+        if sender.state == .began {
             
             let view    = sender.view
             let loc     = sender.location(in: view)
@@ -415,7 +415,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
                 imageCropView.changeScrollable(true)
             }
             
-        } else if sender.state == UIGestureRecognizerState.changed {
+        } else if sender.state == .changed {
             
             if !canPanDuringThisTouch {
                 return
@@ -454,7 +454,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
             
             imaginaryCollectionViewOffsetStartPosY = 0.0
             
-            if sender.state == UIGestureRecognizerState.ended && dragDirection == Direction.stop {
+            if sender.state == .ended && dragDirection == Direction.stop {
                 
                 imageCropView.changeScrollable(true)
                 return
@@ -471,7 +471,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
                 
                 collectionViewConstraintHeight.constant = self.frame.height - imageCropViewMinimalVisibleHeight
                 
-                UIView.animate(withDuration: 0.3, delay: 0.0, options: UIViewAnimationOptions.curveEaseOut, animations: {
+                UIView.animate(withDuration: 0.3, delay: 0.0, options: UIView.AnimationOptions.curveEaseOut, animations: {
                     
                     self.layoutIfNeeded()
                     
@@ -487,7 +487,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
                 imageCropViewConstraintTop.constant = imageCropViewOriginalConstraintTop
                 collectionViewConstraintHeight.constant = self.frame.height - imageCropViewOriginalConstraintTop - imageCropViewContainer.frame.height
                 
-                UIView.animate(withDuration: 0.3, delay: 0.0, options: UIViewAnimationOptions.curveEaseOut, animations: {
+                UIView.animate(withDuration: 0.3, delay: 0.0, options: UIView.AnimationOptions.curveEaseOut, animations: {
                     
                     self.layoutIfNeeded()
                     
@@ -509,7 +509,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         imageCropViewConstraintTop.constant = imageCropViewOriginalConstraintTop
         collectionViewConstraintHeight.constant = self.frame.height - imageCropViewOriginalConstraintTop - imageCropViewContainer.frame.height
         
-        UIView.animate(withDuration: 0.2, delay: 0.0, options: UIViewAnimationOptions.curveEaseOut, animations: {
+        UIView.animate(withDuration: 0.2, delay: 0.0, options: UIView.AnimationOptions.curveEaseOut, animations: {
             
             self.layoutIfNeeded()
             
