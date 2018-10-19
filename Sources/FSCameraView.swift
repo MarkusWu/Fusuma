@@ -226,14 +226,30 @@ final class FSCameraView: UIView, UIGestureRecognizerDelegate {
             default:
                 videoConnection?.videoOrientation = .portrait
             }
+            
+            guard videoConnection != nil else {
+                return
+            }
 
             imageOutput.captureStillImageAsynchronously(from: videoConnection!, completionHandler: { (buffer, error) -> Void in
                 
                 self.stopCamera()
                 
-                let data = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(buffer!)
+                if let error = error {
+                    print("<Fusuma>: error: \(error.localizedDescription)")
+                }
                 
-                if let image = UIImage(data: data!), let delegate = self.delegate {
+                guard let buffer = buffer else {
+                    print("<Fusuma>: error: buffer is nil")
+                    return
+                }
+                
+                guard let data = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(buffer) else {
+                    print("<Fusuma>: error: data is nil")
+                    return
+                }
+                
+                if let image = UIImage(data: data), let delegate = self.delegate {
                     
                     // Image size
                     var iw: CGFloat
