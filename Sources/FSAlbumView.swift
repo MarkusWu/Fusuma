@@ -173,7 +173,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         
         // Set Image Crop Ratio
         if let heightRatio = delegate?.getCropHeightRatio() {
-            imageCropViewContainer.addConstraint(NSLayoutConstraint(item: imageCropViewContainer, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: imageCropViewContainer, attribute: NSLayoutConstraint.Attribute.width, multiplier: heightRatio, constant: 0)
+            imageCropViewContainer.addConstraint(NSLayoutConstraint(item: imageCropViewContainer!, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: imageCropViewContainer, attribute: NSLayoutConstraint.Attribute.width, multiplier: heightRatio, constant: 0)
             )
             layoutSubviews()
         }

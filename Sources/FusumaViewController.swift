@@ -480,7 +480,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
             videoButton.removeFromSuperview()
             
             self.view.addConstraint(NSLayoutConstraint(
-                item:       self.view,
+                item:       self.view!,
                 attribute:  .trailing,
                 relatedBy:  .equal,
                 toItem:     cameraButton,
@@ -495,7 +495,7 @@ public class FusumaViewController: UIViewController, UIGestureRecognizerDelegate
         
         if fusumaCropImage {
             let heightRatio = getCropHeightRatio()
-            cameraView.croppedAspectRatioConstraint = NSLayoutConstraint(item: cameraView.previewViewContainer, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: cameraView.previewViewContainer, attribute: NSLayoutConstraint.Attribute.width, multiplier: heightRatio, constant: 0)
+            cameraView.croppedAspectRatioConstraint = NSLayoutConstraint(item: cameraView.previewViewContainer!, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: cameraView.previewViewContainer, attribute: NSLayoutConstraint.Attribute.width, multiplier: heightRatio, constant: 0)
             
             cameraView.fullAspectRatioConstraint.isActive = false
             cameraView.croppedAspectRatioConstraint?.isActive = true
