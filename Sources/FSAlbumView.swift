@@ -216,31 +216,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         collectionView.register(UINib(nibName: "FSAlbumViewCell", bundle: Bundle(for: self.classForCoder)), forCellWithReuseIdentifier: "FSAlbumViewCell")
         collectionView.backgroundColor = fusumaBackgroundColor
         
-        // Never load photos Unless the user allows to access to photo album
-        checkPhotoAuth()
-        
-        // Sorting condition
-        let options = PHFetchOptions()
-        options.sortDescriptors = [
-            NSSortDescriptor(key: "creationDate", ascending: fusumaImagesAreAscending)
-        ]
-        
-        if fusumaAlbumName.isEmpty == false {
-            let albumOptions = PHFetchOptions()
-            albumOptions.predicate = NSPredicate(format: "title = %@", fusumaAlbumName)
-            let collections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: albumOptions)
-            
-            if let c = collections.firstObject {
-                print("find album by name: \(fusumaAlbumName)")
-                images = PHAsset.fetchAssets(in: c, options: options)
-            } else {
-                images = PHAsset.fetchAssets(with: .image, options: options)
-            }
-        } else {
-            images = PHAsset.fetchAssets(with: .image, options: options)
-        }
-        
-        self.selectImage(at: 0)
+        fetchImagesIfNeeded()
         
         PHPhotoLibrary.shared().register(self)
         
@@ -515,6 +491,33 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
     }
     
     // MARK: - Utilities
+    
+    private func fetchImages() {
+        let options = PHFetchOptions()
+        options.sortDescriptors = [
+            NSSortDescriptor(key: "creationDate", ascending: fusumaImagesAreAscending)
+        ]
+        
+        if fusumaAlbumName.isEmpty == false {
+            let albumOptions = PHFetchOptions()
+            albumOptions.predicate = NSPredicate(format: "title = %@", fusumaAlbumName)
+            let collections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: albumOptions)
+            
+            if let c = collections.firstObject {
+                print("find album by name: \(fusumaAlbumName)")
+                images = PHAsset.fetchAssets(in: c, options: options)
+            } else {
+                images = PHAsset.fetchAssets(with: .image, options: options)
+            }
+        } else {
+            images = PHAsset.fetchAssets(with: .image, options: options)
+        }
+        
+        imageManager = PHCachingImageManager()
+        if images != nil && self.images.count > 0 {
+            self.changeImage(self.images[0])
+        }
+    }
     
     func cropImageContainerNormalPosition() {
         imageCropView.changeScrollable(true)
@@ -844,31 +847,30 @@ extension FSAlbumView {
     }
     
     // Check the status of authorization for PHPhotoLibrary
-    func checkPhotoAuth() {
+    func fetchImagesIfNeeded() {
         
-        let undertermined = PHPhotoLibrary.authorizationStatus() == .notDetermined
-        
-        PHPhotoLibrary.requestAuthorization { (status) -> Void in
-            switch status {
-            case .authorized:
-                self.imageManager = PHCachingImageManager()
-                if self.images != nil && self.images.count > 0 {
-                    
-                    self.changeImage(self.images[0])
-                }
-                
-                DispatchQueue.main.async {
-                    self.delegate?.albumViewCameraRollAuthorized()
-                }
-                
-            case .restricted, .denied:
-                DispatchQueue.main.async(execute: { () -> Void in
-                    if !undertermined {
-                        self.delegate?.albumViewCameraRollUnauthorized()
+        if PHPhotoLibrary.authorizationStatus() == .authorized {
+            fetchImages()
+            selectImage(at: 0)
+        } else {
+            PHPhotoLibrary.requestAuthorization { (status) -> Void in
+                switch status {
+                case .authorized, .limited:
+                    DispatchQueue.main.async {
+                        self.fetchImages()
+                        self.delegate?.albumViewCameraRollAuthorized()
+                        self.collectionView.reloadData()
+                        self.selectImage(at: 0)
                     }
-                })
-            default:
-                break
+                case .restricted, .denied:
+                    DispatchQueue.main.async(execute: { () -> Void in
+                        self.delegate?.albumViewCameraRollUnauthorized()
+                    })
+                case .notDetermined:
+                    break
+                @unknown default:
+                    break
+                }
             }
         }
     }
