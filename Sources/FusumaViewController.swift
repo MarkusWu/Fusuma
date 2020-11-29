@@ -86,6 +86,17 @@ public var fusumaLongPressPhotoLibCellEnabled = false
 
 public var markusAccessPhotosType: MarkusAccessPhotosType = .image
 
+/**
+ The name of the album for loading the images from photo Library. The default value is an empty string.
+ 
+ If it's empty, images are loaded from whole Photo Library. If the specified ablum name can not be found. Images are loaded from whole Photo Library.
+ */
+public var fusumaAlbumName = ""
+/**
+ The Boolean determines whether images are sorted by created date in ascending. The default value is `false`.
+ */
+public var fusumaImagesAreAscending = false
+
 public var fusumaAlbumImage : UIImage? = nil
 public var fusumaCameraImage : UIImage? = nil
 public var fusumaVideoImage : UIImage? = nil

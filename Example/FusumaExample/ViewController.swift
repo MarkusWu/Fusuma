@@ -46,7 +46,7 @@ class ViewController: UIViewController, FusumaDelegate {
     @IBAction func showButtonPressed(_ sender: AnyObject) {
         // Show Fusuma
         
-        let fusuma = FusumaViewController.shared
+        let fusuma = FusumaViewController()
         fusuma.initialSelectedColorIndex = 3
         
         //        fusumaCropImage = false
@@ -61,6 +61,8 @@ class ViewController: UIViewController, FusumaDelegate {
         fusuma.delegate = self
         fusuma.cropHeightRatio = 1.0
         fusumaSavesImage = true
+        
+        fusuma.modalPresentationStyle = .fullScreen
 
         self.present(fusuma, animated: true, completion: nil)
     }

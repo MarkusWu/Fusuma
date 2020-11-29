@@ -21,7 +21,7 @@ import Photos
     func ablumCollectionView(didSelectItemAt indexPath: IndexPath)
 }
 
-final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, PHPhotoLibraryChangeObserver, UIGestureRecognizerDelegate, UITextViewDelegate, FSImageCropViewDelegate {
+final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, PHPhotoLibraryChangeObserver, UIGestureRecognizerDelegate, UITextViewDelegate, FSImageCropViewDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
     var imageCropOverlay: UIView {
@@ -222,10 +222,23 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         // Sorting condition
         let options = PHFetchOptions()
         options.sortDescriptors = [
-            NSSortDescriptor(key: "creationDate", ascending: false)
+            NSSortDescriptor(key: "creationDate", ascending: fusumaImagesAreAscending)
         ]
         
-        images = PHAsset.fetchAssets(with: .image, options: options)
+        if fusumaAlbumName.isEmpty == false {
+            let albumOptions = PHFetchOptions()
+            albumOptions.predicate = NSPredicate(format: "title = %@", fusumaAlbumName)
+            let collections = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: albumOptions)
+            
+            if let c = collections.firstObject {
+                print("find album by name: \(fusumaAlbumName)")
+                images = PHAsset.fetchAssets(in: c, options: options)
+            } else {
+                images = PHAsset.fetchAssets(with: .image, options: options)
+            }
+        } else {
+            images = PHAsset.fetchAssets(with: .image, options: options)
+        }
         
         self.selectImage(at: 0)
         
@@ -665,7 +678,7 @@ final class FSAlbumView: UIView, UICollectionViewDataSource, UICollectionViewDel
         return images == nil ? 0 : images.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         let width = (collectionView.frame.width - 3) / 4
         return CGSize(width: width, height: width)
