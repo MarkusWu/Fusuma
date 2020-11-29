@@ -34,6 +34,7 @@ class ViewController: UIViewController, FusumaDelegate {
         fusumaCameraZoomInEnabled = true
         fusumaPrefersStatusBarHidden = true
         fusumaAutoDismiss = true
+        fusumaAlbumName = "My Images"
         
         fusumaTextColors = Array(repeating: UIColor.magenta, count: 10)
     }
@@ -54,7 +55,7 @@ class ViewController: UIViewController, FusumaDelegate {
         if #available(iOS 11.0, *) {
             fusuma.safeAreaInsets = self.view.safeAreaInsets
         }
-        fusuma.photoEditable = true
+        fusuma.photoEditable = false
         fusuma.saveAsScreenshoot = true
         fusuma.statusBarHeight = 0
         fusuma.photoCamOption = .noVideo

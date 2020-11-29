@@ -140,6 +140,9 @@ public var fusumaPhotosModalTransitionStyle: UIModalTransitionStyle = .crossDiss
 public var fusumaShowDoneButtonOnLibraryOnly = false
 
 public var fusumaCameraRollTitle = "CAMERA ROLL"
+var photoTitle: String {
+    fusumaAlbumName.isEmpty ? fusumaCameraRollTitle : fusumaAlbumName
+}
 public var fusumaCameraTitle = "PHOTO"
 public var fusumaVideoTitle = "VIDEO"
 public var fusumaTitleFont = UIFont(name: "AvenirNext-DemiBold", size: 15)
@@ -1035,7 +1038,7 @@ private extension FusumaViewController {
         
         switch mode {
         case .library:
-            titleLabel.text = NSLocalizedString(fusumaCameraRollTitle, comment: fusumaCameraRollTitle)
+            titleLabel.text = NSLocalizedString(photoTitle, comment: "")
             
             highlightButton(libraryButton)
             self.view.bringSubviewToFront(photoLibraryViewerContainer)
