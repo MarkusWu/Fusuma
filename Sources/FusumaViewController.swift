@@ -1190,7 +1190,6 @@ extension FusumaViewController: UIImagePickerControllerDelegate, UINavigationCon
         self.shouldRepositionImageCropContainerOnViewDisapper = false
         
         imagePicker.mediaTypes = types
-        imagePicker.modalTransitionStyle = fusumaPhotosModalTransitionStyle
         self.present(imagePicker, animated: true, completion: nil)
     }
     
